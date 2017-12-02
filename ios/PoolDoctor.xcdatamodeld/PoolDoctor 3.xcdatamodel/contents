@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="1.1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Group" representedClassName="Group" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="pools" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pools" inverseName="group" inverseEntity="Pools" syncable="YES"/>
+        <relationship name="user" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="groups" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="LogEntry" representedClassName="LogEntry" syncable="YES">
+        <attribute name="date_created" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="modified_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parseID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="pool" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Pools" inverseName="log" inverseEntity="Pools" syncable="YES"/>
+        <relationship name="readings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Reading" inverseName="log" inverseEntity="Reading" syncable="YES"/>
+        <relationship name="treatments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Treatment" inverseName="log" inverseEntity="Treatment" syncable="YES"/>
+    </entity>
+    <entity name="Pools" representedClassName="Pools" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer_first_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customer_last_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isGallons" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="material" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="modified_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parseID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="volume" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="pools" inverseEntity="Group" syncable="YES"/>
+        <relationship name="log" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LogEntry" inverseName="pool" inverseEntity="LogEntry" syncable="YES"/>
+    </entity>
+    <entity name="Reading" representedClassName="Reading" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parseID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="units" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="log" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="LogEntry" inverseName="readings" inverseEntity="LogEntry" syncable="YES"/>
+    </entity>
+    <entity name="Treatment" representedClassName="Treatment" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cheimcal" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parseID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="units" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="log" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="LogEntry" inverseName="treatments" inverseEntity="LogEntry" syncable="YES"/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="bought_ad_removal" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="circle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="expires_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="has_account" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_activated" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="railsID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="user" inverseEntity="Group" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Group" positionX="270" positionY="63" width="128" height="105"/>
+        <element name="LogEntry" positionX="205" positionY="441" width="128" height="165"/>
+        <element name="Pools" positionX="7" positionY="171" width="128" height="268"/>
+        <element name="Reading" positionX="-0" positionY="624" width="128" height="135"/>
+        <element name="Treatment" positionX="439" positionY="624" width="128" height="133"/>
+        <element name="User" positionX="90" positionY="9" width="128" height="105"/>
+    </elements>
+</model>

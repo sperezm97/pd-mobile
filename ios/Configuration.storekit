@@ -1,0 +1,71 @@
+{
+  "identifier" : "9136DEE0",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "2168567E",
+      "localizations" : [
+
+      ],
+      "name" : "pooldash",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "95854512",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Save unlimited pools, view charts & trends",
+              "displayName" : "Annual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "unlock_20",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "unlock_20",
+          "subscriptionGroupID" : "2168567E",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "D2BBC5DD",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Save unlimited pools, view charts & trends",
+              "displayName" : "Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "monthly_2",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "monthly_2",
+          "subscriptionGroupID" : "2168567E",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 1
+  }
+}

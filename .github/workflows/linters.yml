@@ -1,0 +1,24 @@
+name: Prettier and Eslint
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
+          
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Use Node 
+        uses: actions/setup-node@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Linters
+        run: npm run lint

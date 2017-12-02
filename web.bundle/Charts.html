@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Line Chart</title>
+    <script src="Chart.bundle.js"></script>
+    <script src="chartjs-plugin-annotation.min.js"></script>
+    <style type="text/css">
+        canvas {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            outline: none;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+            /* mobile webkit */
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=0.3, maximum-scale=0.3, user-scalable=no" />
+</head>
+
+<body>
+    <div style="width:99%;">
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        var showGraph = function (points, dates, idealMin, idealMax, backgroundColor) {
+
+            // Temporary data for testing. This should be removed
+            // points = [1000, 5000, 4000];
+            // dates = ["11/11","11/12","11/13"];
+            // idealMin = 30;
+            // idealMax = 70;
+
+            maxPoint = Math.max(...points);
+            minPoint = Math.min(...points);
+            step = maxPoint - minPoint / points.length;
+
+            var ctx = document.getElementById("canvas").getContext("2d");
+
+            // Gradient stroke color
+            var gradientStroke = ctx.createLinearGradient(0, 0, 1000, 0);
+            gradientStroke.addColorStop(0, "#1E6BFF");
+            gradientStroke.addColorStop(1, "#1E6BFF");
+
+            // Gradient delta background color
+            // it's not a gradient anymore... meh
+            var gradientBackground = ctx.createLinearGradient(0, 0, 1000, 0);
+            gradientBackground.addColorStop(0, "rgba(30, 107, 255, 0.1)");
+            gradientBackground.addColorStop(1, "rgba(30, 107, 255, 0.1)");
+
+
+            Chart.defaults.LineWithLine = Chart.defaults.line;
+            Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+                draw: function (ease) {
+                    if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                        var activePoint = this.chart.tooltip._active[ 0 ],
+                            ctx = this.chart.ctx,
+                            x = activePoint.tooltipPosition().x,
+                            topY = this.chart.scales[ 'y-axis-1' ].top,
+                            bottomY = this.chart.scales[ 'y-axis-1' ].bottom;
+
+                        // draw line
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.moveTo(x, topY);
+                        ctx.lineTo(x, bottomY);
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#000';
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                    Chart.controllers.line.prototype.draw.call(this, ease);
+                }
+            });
+
+            const annotations = [
+                {
+                    type: "line",
+                    yScaleID: "y-axis-1",
+                    mode: "vertical"
+                }
+            ];
+            if (idealMin && idealMax) {
+                annotations.push({
+                    type: "box",
+                    yScaleID: "y-axis-1",
+                    yMin: idealMin,
+                    yMax: idealMax,
+                    borderWidth: 1,
+                    backgroundColor: gradientBackground,
+                    borderColor: "#fff"
+                });
+            }
+
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'LineWithLine',
+
+                // The data for our dataset
+                data: {
+                    labels: dates,
+                    datasets: [ {
+                        data: points,
+                        fill: false,
+                        lineTension: 0.4,
+                        pointBackgroundColor: gradientStroke,
+                        pointBorderColor: "#fff",
+                        pointRadius: 20,
+                        pointBorderWidth: 12,
+                        pointHitRadius: 15,
+                        pointHoverBackgroundColor: gradientStroke,
+                        pointHoverBorderColor: "#fff",
+                        pointHoverBorderWidth: 7,
+                        pointHoverRadius: 14,
+                        borderColor: gradientStroke,
+                        borderWidth: 12
+                    } ]
+                },
+
+                // Configuration options go here
+                options: {
+                    responsive: true,
+
+                    // Chart layout
+                    layout: {
+                        padding: {
+                            left: 60,
+                            right: 60,
+                            top: 90,
+                            bottom: 20
+                        }
+                    },
+
+                    // Legend
+                    legend: {
+                        display: false
+                    },
+
+                    // Title
+                    title: {
+                        display: false
+                    },
+
+                    // Scale
+                    scales: {
+                        yAxes: [ {
+                            id: "y-axis-1",
+                            scaleLabel: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false,
+                                maxTicksLimit: 4.8,
+                                beginAtZero: true
+                            },
+                            gridLines: {
+                                drawTicks: false,
+                                drawBorder: false
+                            }
+                        } ],
+                        xAxes: [ {
+                            gridLines: {
+                                display: false,
+                                drawTicks: false,
+                                lineWidth: 1,
+                                drawBorder: false
+                            },
+                            scaleLabel: {
+                                display: false,
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        } ]
+                    },
+
+                    // Tooltips
+                    tooltips: {
+                        intersect: false,
+                        backgroundColor: "#fff",
+                        titleFontColor: "#000",
+                        titleFontSize: 32,
+                        yPadding: 10,
+                        xPadding: 10,
+                        borderColor: "#000",
+                        borderWidth: 3,
+                        bodyFontColor: "#000",
+                        bodyFontSize: 20,
+                        caretPadding: 30,
+                        position: 'nearest',
+                        yAlign: 'bottom',
+                        caretSize: 0,
+                        callbacks: {
+                            title: function (tooltipItem, data) {
+                                return tooltipItem[ 0 ].xLabel + " \u2022 " + tooltipItem[ 0 ].yLabel;
+                            },
+                            label: function (tooltipItem, data) {
+                                return "";
+                            }
+                        },
+                        cornerRadius: 20,
+                    },
+
+                    // Annotations
+                    annotation: {
+                        drawTime: "beforeDatasetsDraw",
+                        annotations: annotations
+                    },
+                },
+            });
+
+            // Chart.helpers.each(Chart.instances, function (instance) {
+            //     if ("canvas" == instance.canvas.id) {
+            //         instance.options.annotation.annotations.push({
+            //                 type: "box",
+            //                 yScaleID: "y-axis-1",
+            //                 yMin: idealMin,
+            //                 yMax: idealMax,
+            //                 borderWidth: 1,
+            //                 backgroundColor: gradientBackground,
+            //                 borderColor: "#fff"
+            //             });
+            //     }
+            // });
+
+            return 1;
+        }
+
+        window.graphData = function (graphData) {
+            setTheme(graphData.theme);
+            showGraph(graphData.points, graphData.dates, graphData.idealMin, graphData.idealMax, graphData.theme.backgroundColor);
+        }
+
+        const setTheme = (theme) => {
+            document.body.style.backgroundColor = theme.backgroundColor;
+        };
+    </script>
+</body>
+
+</html>
