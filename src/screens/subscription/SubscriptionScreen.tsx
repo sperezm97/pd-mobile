@@ -1,33 +1,63 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Linking, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { PDButton } from '~/components/buttons/PDButton';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
+import { HR } from '~/components/Hr';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
+import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
-import { DS } from '~/services/DSUtil';
-
-import { usePurchaseState } from '../../services/subscription/SubHooks';
-import { SubscriptionOptions } from './components/prompt/SubscriptionOptions';
-import { SubscriptionSuccess } from './components/success/SubscriptionSucces';
+import { PDView } from '~/components/PDView';
 
 export const SubscriptionScreen: React.FC = () => {
     const theme = useTheme();
 
-    const purchaseState = usePurchaseState();
+    const handlePatreonPressed = async () => {
+        Linking.openURL('https://patreon.com/gazzini');
+    };
 
-    const d = purchaseState.details;
-    const isActive = d && DS.isSubscriptionValid({ sub_exp: d.exp.getTime(), sub_will_renew: d.will_renew }, Date.now());
-    const content = (isActive && d)     // the (&& d) portion is only necessary to make the type-checker happy.
-        ? <SubscriptionSuccess { ...d } />
-        :  <SubscriptionOptions />;
+    const handleGithubPressed = async () => {
+        Linking.openURL('https://github.com/pooldash/pd-mobile');
+    };
 
     return (
         <PDSafeAreaView bgColor="white" forceInset={ { bottom: 'never' } }>
             <ScreenHeader color="blue" textType="heading">
-                Pooldash+
+                Pooldash
             </ScreenHeader>
             <ScrollView style={ [styles.content, { backgroundColor: theme.colors.greyLighter } ] }>
-                { content }
+                <PDView>
+                    <PDText type="subHeading">
+                        👋 Hi, I'm John!
+                    </PDText>
+                    <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                        I used to clean pools, and now I'm an engineer. Thanks for using Pooldash!
+                    </PDText>
+                </PDView>
+                <HR/>
+                <PDText type="subHeading">
+                    Subscribe
+                </PDText>
+                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                    If you enjoy this app, please support me as I build it. The app is totally free, so this is based on the honor-system.
+                </PDText>
+                <PDView style={ styles.buttonContainer }>
+                    <PDButton onPress={ handlePatreonPressed } bgColor="blue">
+                        Open Patreon
+                    </PDButton>
+                </PDView>
+                <HR/>
+                <PDText type="subHeading">
+                    Explore
+                </PDText>
+                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                    Want to explore the code? It's open source:
+                </PDText>
+                <PDView style={ styles.buttonContainer }>
+                    <PDButton onPress={ handleGithubPressed } bgColor="greyDarker">
+                        Open GitHub
+                    </PDButton>
+                </PDView>
             </ScrollView>
         </PDSafeAreaView>
     );
@@ -37,5 +67,17 @@ const styles = StyleSheet.create({
     content: {
         paddingHorizontal: PDSpacing.md,
         paddingTop: PDSpacing.lg,
+    },
+    buttonContainer: {
+        marginTop: PDSpacing.lg,
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+    },
+    buttonIcon: {
+        marginTop: 'auto',
+        marginBottom: 'auto',
+        marginLeft: 4,
     },
 });

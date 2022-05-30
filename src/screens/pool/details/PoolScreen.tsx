@@ -14,7 +14,6 @@ import { PDStackNavigationProps } from '~/navigator/shared';
 import { useThunkDispatch, useTypedSelector } from '~/redux/AppState';
 import { updatePool } from '~/redux/selectedPool/Actions';
 import { Database } from '~/repository/Database';
-import { DS } from '~/services/DSUtil';
 import { EmailService } from '~/services/EmailService';
 import { Haptic } from '~/services/HapticService';
 import { RecipeService } from '~/services/RecipeService';
@@ -29,17 +28,13 @@ import { ForumPrompt } from '~/screens/home/footer/ForumPrompt';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
-import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
 
 
 export const PoolScreen: React.FC = () => {
     useStandardStatusBar();
-    const { ds } = useDeviceSettings();
     const selectedPool = useTypedSelector((state) => state.selectedPool);
     const dispatchThunk = useThunkDispatch();
     const theme = useTheme();
-
-    const isUnlocked = DS.isSubscriptionValid(ds, Date.now());
 
     const { navigate } = useNavigation<PDStackNavigationProps>();
 
@@ -76,11 +71,7 @@ export const PoolScreen: React.FC = () => {
     };
 
     const handleChartsPressed = () => {
-        if (isUnlocked) {
-            navigate('PoolHistory');
-        } else {
-            navigate('Subscription');
-        }
+        navigate('PoolHistory');
     };
 
     const handleHistoryCellPressed = (logEntryId: string) => {
@@ -226,7 +217,7 @@ export const PoolScreen: React.FC = () => {
                 renderItem={ ({ section, item }) => renderItem(section, item) }
                 contentInset={ { bottom: 34 } }
                 stickySectionHeadersEnabled={ true }
-                keyExtractor={ (section, item) => `${section.key}|${item}|${isUnlocked ? 'unlocked' : 'locked'}` }
+                keyExtractor={ (section, item) => `${section.key}|${item}` }
                 renderSectionFooter={ (info) => renderSectionFooter(info.section) }
             />
         </PDSafeAreaView>

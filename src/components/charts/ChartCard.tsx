@@ -1,14 +1,13 @@
 import format from 'date-fns/format';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRef } from 'react';
-import { Animated, Platform, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { PDText } from '../PDText';
 import { useTheme } from '../PDTheme';
 import { PDView } from '../PDView';
-import { Upgrade } from '../Upgrade';
 import { ChartCardViewModel } from './ChartCardViewModel';
 
 interface ChartCardProps {
@@ -18,25 +17,9 @@ interface ChartCardProps {
 
 export const ChartCard: React.FC<ChartCardProps> = (props) => {
 
-    const overlayOpacity = useRef(new Animated.Value(0)).current;
     const webView = useRef<WebView>(null);
     const theme = useTheme();
     const [isChartVisible, setIsChartVisible] = useState(false);
-
-    useEffect(() => {
-        // If unlocked, then hide the overlay
-        if (props.viewModel.isUnlocked) {
-            overlayOpacity.setValue(0);
-        } else {
-            Animated.timing(overlayOpacity, {
-                delay: 800,
-                toValue: 1,
-                duration: 500,
-                useNativeDriver: true,
-                isInteraction: false,
-            }).start();
-        }
-    }, [overlayOpacity, props.viewModel.isUnlocked]);
 
     const formatTimestamp = (ts: number, df: string): string => {
         return format(ts, df);
@@ -105,12 +88,6 @@ export const ChartCard: React.FC<ChartCardProps> = (props) => {
                 <PDView style={ styles.labelContainer }>{getDateLabels()}</PDView>
             </PDView>
             {props.children}
-            <Animated.View style={ [styles.overlay, { opacity: overlayOpacity }] } pointerEvents={ 'none' }>
-                <Upgrade
-                    style={ styles.upgradeContainer }
-                    onPress={ () => {} }
-                />
-            </Animated.View>
         </PDView>
     );
 };
@@ -159,20 +136,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         fontFamily: 'Poppins-Regular',
-    },
-    overlay: {
-        position: 'absolute',
-        display: 'flex',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: 'white',
-        borderRadius: 24,
-    },
-    upgradeContainer: {
-        position: 'relative',
-        display: 'flex',
-        flex: 1,
     },
 });

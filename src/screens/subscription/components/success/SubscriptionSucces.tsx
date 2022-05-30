@@ -8,7 +8,6 @@ import { PDView } from '~/components/PDView';
 import { ProductId } from '~/models/InAppPurchase';
 import { IAP } from '~/services/subscription/IAP';
 
-import { SubscriptionFeatures } from '../shared/SubscriptionFeatures';
 import { SU } from '~/services/subscription/Util';
 
 interface SubscriptionSuccessScreenProps {
@@ -55,7 +54,6 @@ export const SubscriptionSuccess: React.FC<SubscriptionSuccessScreenProps> = ({ 
                 </PDView>
             </PDView>
 
-            <SubscriptionFeatures showTitle={ true } />
             <PDView style={ styles.buttonContainer }>
                 <PDButton onPress={ handleManageSubPressed } bgColor="blue">
                     Manage Subscription

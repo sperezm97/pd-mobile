@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 import { PoolUnit, PoolUnitOptions } from '~/models/Pool/PoolUnit';
 import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
 import pluralize from 'pluralize';
-import { DS } from '~/services/DSUtil';
 import { PDSection } from '~/components/list/models';
 
 export const useSettings = () => {
@@ -62,8 +61,6 @@ export const useSettings = () => {
     const numScoops = ds.scoops.length;
     const scoopsSubtitle = `${numScoops} ${pluralize('scoop', numScoops)}`;
 
-    const isSubscribed = DS.isSubscriptionValid(ds, Date.now());
-
     const settingsSection : PDSection[] = [
         {
             title: 'measurements',
@@ -91,14 +88,14 @@ export const useSettings = () => {
             ],
         },
         {
-            title: 'subscription',
+            title: 'open source',
             data: [
                 {
                     id: 'pooldashPlus',
                     image: 'IconPooldashPlus',
-                    label: isSubscribed ? 'Manage: ' : 'Upgrade to: ',
-                    valueColor: 'teal',
-                    value: 'Pooldash+',
+                    label: 'Subscribe',
+                    valueColor: 'black',
+
                     onPress: handleNavigationSubscription,
 
                     animationIndex: 2,

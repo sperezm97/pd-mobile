@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import TouchableScale from 'react-native-touchable-scale';
 import { useDispatch } from 'react-redux';
 import { SVG } from '~/assets/images';
@@ -8,9 +8,6 @@ import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
 import { PDStackNavigationProps } from '~/navigator/shared';
 import { clearPool } from '~/redux/selectedPool/Actions';
-import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
-import { DS } from '~/services/DSUtil';
-
 import { useNavigation } from '@react-navigation/native';
 
 interface SearchHeaderProps {
@@ -20,40 +17,12 @@ interface SearchHeaderProps {
 
 export const SearchHeader: React.FC<SearchHeaderProps> = (props) => {
     const { navigate } = useNavigation<PDStackNavigationProps>();
-    const { ds } = useDeviceSettings();
     const dispatch = useDispatch();
     const theme = useTheme();
 
-    const promptUpgrade = () => {
-        Alert.alert(
-            'Upgrade Required',
-            'Want to add unlimited pools, view charts, and support our small team?',
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                {
-                    text: 'Upgrade',
-                    onPress: () => {
-                        navigate('Subscription');
-                    },
-                    style: 'default',
-                },
-            ],
-            { cancelable: true },
-        );
-    };
-
     const handleAddButtonPressed = () => {
-        const hasUpgraded = DS.isSubscriptionValid(ds, Date.now());
-        if (hasUpgraded || (props.numPools === 0)) {
-            dispatch(clearPool());
-            navigate('EditPoolNavigator');
-        } else {
-            promptUpgrade();
-        }
+        dispatch(clearPool());
+        navigate('EditPoolNavigator');
     };
 
     const handleSettingButtonPressed = () => {
