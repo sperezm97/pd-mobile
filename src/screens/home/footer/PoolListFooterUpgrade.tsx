@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
-import { Animated, Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { images } from '~/assets/images';
+import { Animated, StyleSheet, TouchableOpacity } from 'react-native';
 import { AV } from '~/components/animation/AnimationHelpers';
 import { PDText } from '~/components/PDText';
-import { PDSpacing, useTheme } from '~/components/PDTheme';
+import { PDSpacing } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
-import { DS } from '~/services/DSUtil';
 import { Util } from '~/services/Util';
 
 
@@ -16,30 +13,10 @@ interface PoolListFooterNonEmptyProps {
     numPools: number;
 }
 
+/// TODO: rename component, it's not for upgrading anymore.
 export const PoolListFooterUpgrade: React.FunctionComponent<PoolListFooterNonEmptyProps> = (props) => {
     const [isChangeButtonPressed, setIsChangeButtonPressed] = React.useState(false);
-    const { ds } = useDeviceSettings();
-    const isPlus = DS.isSubscriptionValid(ds, Date.now());
     const a = useAnimation(props.numPools);
-    const theme = useTheme();
-
-    if (isPlus) {
-        // I don't know if this is necessary:
-        const imageWidth = Dimensions.get('window').width - 20;
-        const imageHeight = imageWidth * 0.3108;
-        const imageSource = theme.isDarkMode ? images.logoWhitePlus : images.logoGreenPlus;
-        return (
-            <AV opacity={ a.opacity } style={ { alignSelf: 'center' } }>
-                <Image
-                    style={ styles.image }
-                    source={ imageSource }
-                    width={ imageWidth }
-                    height={ imageHeight }
-                    resizeMode={ 'contain' }
-                />
-            </AV>
-        );
-    }
 
     const toggleChangeButtonPressed = () => {
         setIsChangeButtonPressed(!isChangeButtonPressed);

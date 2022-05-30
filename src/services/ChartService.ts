@@ -4,7 +4,7 @@ import { Database } from '~/repository/Database';
 import { Pool } from '~/models/Pool';
 
 export class ChartService {
-    static loadChartData = (dateRange: DateRange, pool: Pool, isUnlocked: boolean): ChartCardViewModel[] => {
+    static loadChartData = (dateRange: DateRange, pool: Pool): ChartCardViewModel[] => {
         const msInRange = ChartService.msInDateRange(dateRange);
         const since_ts = msInRange ? Date.now() - msInRange : null;
         const data = Database.loadLogEntriesForPool(pool.objectId, since_ts, false);
@@ -82,14 +82,13 @@ export class ChartService {
                 values: values,
                 timestamps: dates,
                 interactive: true,
-                isUnlocked,
                 idealMin: graphable.idealMin,
                 idealMax: graphable.idealMax,
             };
         });
     };
 
-    static loadFakeData = (isUnlocked: boolean): ChartCardViewModel => {
+    static loadFakeData = (): ChartCardViewModel => {
         const timestamps = [4, 5, 6]; // TODO: remove
         const values = [3, 5, 4];
         const vm: ChartCardViewModel = {
@@ -98,7 +97,6 @@ export class ChartService {
             title: '',
             masterId: 'a9sd8f093',
             interactive: false,
-            isUnlocked,
             idealMin: 3,
             idealMax: 4,
         };

@@ -12,7 +12,6 @@ import { RecipeRepo } from './repository/RecipeRepo';
 import { CrashServices } from './services/CrashServices';
 import { DeviceSettingsService } from './services/DeviceSettings/DeviceSettingsService';
 import { getApolloClient } from './services/gql/Client';
-import { IAP } from '~/services/subscription/IAP';
 import { RecipeService } from './services/RecipeService';
 import { useDeviceSettings } from './services/DeviceSettings/Hooks';
 import { darkTheme, lightTheme, PDThemeContext } from './components/PDTheme';
@@ -22,7 +21,7 @@ export const App: React.FC = () => {
     const [isDatabaseLoaded, setIsDatabaseLoaded] = React.useState(false);
     const [areRecipesPreloaded, setAreRecipesPreloaded] = React.useState(false);
     const [areDeviceSettingsLoaded, setAreDeviceSettingsLoaded] = React.useState(false);
-    const { updateDSForPurchaseState, ds } = useDeviceSettings();   // Can i do this before loadDeviceSettings is called?
+    const { ds } = useDeviceSettings();   // Can i do this before loadDeviceSettings is called?
     const apolloClient = getApolloClient();
 
     React.useEffect(() => {
@@ -39,7 +38,6 @@ export const App: React.FC = () => {
             setAreDeviceSettingsLoaded(true);
         });
 
-        IAP.configureOnLaunch();
         CrashServices.initialize();
     }, []);
 
@@ -52,17 +50,6 @@ export const App: React.FC = () => {
             RecipeService.updateAllLocalRecipes(apolloClient);
         }
     }, [isDatabaseLoaded, areRecipesPreloaded]);
-
-    // Only do this after DeviceSettings are loaded:
-    React.useEffect(() => {
-        if (areDeviceSettingsLoaded) {
-            const cb = async () => {
-                const purchaseState = await IAP.fetchSubscriptionStatus();
-                updateDSForPurchaseState(purchaseState);
-            };
-            cb();
-        }
-    }, [areDeviceSettingsLoaded]);
 
     const isAppReady = isDatabaseLoaded && areRecipesPreloaded && areDeviceSettingsLoaded;
     if (!isAppReady) {

@@ -11,7 +11,6 @@ import { AppState } from '~/redux/AppState';
 import { ChartCardViewModel } from '~/components/charts/ChartCardViewModel';
 import { DeviceSettings } from '~/models/DeviceSettings';
 import { useNavigation } from '@react-navigation/native';
-import { DS } from '~/services/DSUtil';
 import { ChartService } from '~/services/ChartService';
 import { PDNavParams } from '~/navigator/shared';
 import { useTheme } from '~/components/PDTheme';
@@ -38,11 +37,10 @@ const PoolHistoryComponent: React.FunctionComponent<PoolHistoryProps> = (props) 
     const insets = useSafeArea();
     const theme = useTheme();
 
-    const { selectedPool, deviceSettings } = props;
-    const isUnlocked = DS.isSubscriptionValid(deviceSettings, Date.now());
+    const { selectedPool } = props;
 
     React.useEffect(() => {
-        setChartData(ChartService.loadChartData(dateRange, selectedPool, isUnlocked));
+        setChartData(ChartService.loadChartData(dateRange, selectedPool));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedPool.objectId, dateRange]);
 

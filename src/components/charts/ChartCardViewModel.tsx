@@ -9,8 +9,6 @@ export interface ChartCardViewModel {
     timestamps: number[];
     /// Whether the view should be interactive
     interactive: boolean;
-    /// Whether the user has purchased the unlock
-    isUnlocked: boolean;
     /// The ideal range, if any:
     idealMin: number | null;
     idealMax: number | null;
