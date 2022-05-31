@@ -393,7 +393,7 @@
 				CODE_SIGN_ENTITLEMENTS = "pooldash/dev pd.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 170;
 				DEVELOPMENT_TEAM = 48DG894L4C;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -429,7 +429,7 @@
 				CODE_SIGN_ENTITLEMENTS = "pooldash/dev pd.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 170;
 				DEVELOPMENT_TEAM = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = pooldash/Info.plist;
