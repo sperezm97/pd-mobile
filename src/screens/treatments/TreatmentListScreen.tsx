@@ -362,7 +362,7 @@ export const TreatmentListScreen: React.FC = () => {
 
     return (
         <PDSafeAreaView bgColor="white" forceInset={ { bottom: 'never' } }>
-            <ScreenHeader textType="heading" color="purple" hasHelpButton handlePressedHelp={ () => setIsShowingHelp(!isShowingHelp) }>Treatments</ScreenHeader>
+            <ScreenHeader textType="heading" color="purple" hasHelpButton={ false } handlePressedHelp={ () => setIsShowingHelp(!isShowingHelp) }>Treatments</ScreenHeader>
             <KeyboardAwareSectionList
                 style={ StyleSheet.flatten([styles.sectionList, { backgroundColor: theme.colors.background }]) }
                 keyboardDismissMode="interactive"
