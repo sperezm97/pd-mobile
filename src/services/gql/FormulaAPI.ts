@@ -1,11 +1,7 @@
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
 import { Formula } from '~/models/recipe/Recipe';
 import { FormulaKey } from '~/models/recipe/FormulaKey';
-
-import { QueryResult } from '@apollo/react-common';
-import { useQuery } from '@apollo/react-hooks';
+import { ApolloClient, NormalizedCacheObject, QueryResult, useQuery } from '@apollo/client';
 
 import { RS } from '../RecipeUtil';
 import { FetchLatestFormulaMeta, FetchLatestFormulaMetaVariables } from './generated/FetchLatestFormulaMeta';

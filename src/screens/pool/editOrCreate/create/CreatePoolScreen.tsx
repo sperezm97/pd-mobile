@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SectionList, StyleSheet } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ModalHeader from '~/components/headers/ModalHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDText } from '~/components/PDText';
@@ -28,7 +28,7 @@ export const CreatePoolScreen: React.FC = () => {
     }));
     const createPoolSectionInfo = useCreatePool(deviceSettings);
     const dispatch = useThunkDispatch();
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     const theme = useTheme();
 
     const { pool, isRequiredFilledOut } = useEntryPool();

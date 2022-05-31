@@ -50,7 +50,7 @@ export class BackButton extends React.Component<BackButtonProps, {}> {
                     hitSlop={ { top: hitSlop, left: hitSlop, bottom: hitSlop, right: hitSlop } }
                     disabled={ Config.isAndroid }>
                     <PlatformSpecific exclude={ ['android'] }>
-                        <Image style={ styles.backButtonImage } source={ imageSource } width={ 32 } height={ 32 } />
+                        <Image style={ styles.backButtonImage } source={ imageSource } />
                     </PlatformSpecific>
                     {this.getText()}
                 </TouchableScale>
@@ -69,6 +69,8 @@ const styles = StyleSheet.create({
     backButtonImage: {
         marginTop: 8,
         marginRight: 10,
+        height: 32,
+        width: 32,
     },
     backButtonText: {
         paddingTop: 5,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PDPickerRouteProps, PickerScreen } from '~/screens/picker/PickerScreen';
 import { PopoverRouteProps, PopoverScreen } from '~/screens/popover/PopoverScreen';
 import {
@@ -45,14 +45,14 @@ export const PDRootNavigator = (): JSX.Element => {
         <NavigationContainer theme={ navTheme }>
             <RootStack.Navigator
                 screenOptions={ {
-                    stackPresentation: 'formSheet',
+                    presentation: 'formSheet',
                     headerShown: false,
                 } }>
                 <RootStack.Screen name="PDCardNavigator" component={ PDCardNavigator } />
                 <RootStack.Screen
                     name="PickerScreen"
                     component={ PickerScreen }
-                    options={ { stackPresentation: 'fullScreenModal' } }
+                    options={ { presentation: 'fullScreenModal' } }
                 />
                 <RootStack.Screen name="EditPoolNavigator" component={ EditPoolNavigator } />
                 <RootStack.Screen name="ScoopDetails" component={ ScoopDetailsScreen } />

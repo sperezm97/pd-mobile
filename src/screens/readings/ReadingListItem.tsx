@@ -94,7 +94,7 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
                 <TouchableScale onPress={ () => props.handleIconPressed(r.var) } activeScale={ 0.98 }>
                     <PDView bgColor="white" borderColor="border" style={ styles.content }>
                         <PDView style={ styles.topRow }>
-                            <Image style={ styles.circleImage } source={ leftImageSource } width={ 28 } height={ 28 } />
+                            <Image style={ styles.circleImage } source={ leftImageSource } />
                             <PDText type="bodySemiBold" color="black" style={ styles.readingName }>
                                 {r.name}
                                 <PDText type="bodySemiBold"  color="greyDark" style={ styles.readingUnits }>{readingUnitsText}</PDText>
@@ -162,6 +162,8 @@ const styles = StyleSheet.create({
     },
     circleImage: {
         marginRight: 10,
+        width: 28,
+        height: 28,
     },
     readingName: {
         fontSize: 18,

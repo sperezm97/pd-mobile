@@ -33,7 +33,7 @@ import { TreatmentListFooter } from './TreatmentListFooter';
 import { TreatmentListHelpers, TreatmentState } from './TreatmentListHelpers';
 import { TreatmentListItem } from './TreatmentListItem';
 import { PlayButton } from '~/components/buttons/PlayButton';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TreatmentListHeader } from './TreatmentListHeader';
 import { PDProgressBar } from '~/components/PDProgressBar';
 import { useStandardStatusBar } from '~/hooks/useStatusBar';
@@ -55,7 +55,7 @@ export const TreatmentListScreen: React.FC = () => {
     const targetRangeOverridesForPool = useRealmPoolTargetRangesForPool(pool?.objectId ?? null);
     const routesInNavStack = useNavigationState(state => state.routes.map(r => r.name));
     const theme = useTheme();
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     const [isSavingDebounce, setIsSavingDebounce] = React.useState(false);
     const allScoops = ds.scoops;
     const [haveCalculationsProcessed, setHaveCalculationsProcessed] = React.useState(false);

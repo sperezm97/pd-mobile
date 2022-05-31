@@ -3,13 +3,12 @@ import * as React from 'react';
 import { PDRootNavigator } from '~/navigator/PDRootNavigator';
 import { loadDeviceSettings } from '~/redux/deviceSettings/Actions';
 
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 
 import { DeviceSettings } from './models/DeviceSettings';
 import { dispatch } from './redux/AppState';
 import { Database } from './repository/Database';
 import { RecipeRepo } from './repository/RecipeRepo';
-import { CrashServices } from './services/CrashServices';
 import { DeviceSettingsService } from './services/DeviceSettings/DeviceSettingsService';
 import { getApolloClient } from './services/gql/Client';
 import { RecipeService } from './services/RecipeService';
@@ -37,8 +36,6 @@ export const App: React.FC = () => {
             dispatch(loadDeviceSettings(settings));
             setAreDeviceSettingsLoaded(true);
         });
-
-        CrashServices.initialize();
     }, []);
 
     // Only do this after recipes are preloaded & the database is ready to go

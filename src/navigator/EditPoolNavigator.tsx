@@ -34,7 +34,7 @@ export const EditPoolNavigator: React.FC = () => {
     return (
         <PoolProvider>
             <ShapeProvider>
-                <PoolStackNavigator.Navigator headerMode="none" mode="card">
+                <PoolStackNavigator.Navigator screenOptions={ { headerShown: false } } >
                     <PoolStackNavigator.Screen name="EditOrCreatePoolScreen" component={ EditOrCreatePoolScreen } />
                     <PoolStackNavigator.Screen name="EditPoolModal" component={ PoolPopover } />
                     <PoolStackNavigator.Screen name="SelectShape" component={ SelectShapeScreen } />

@@ -1,4 +1,5 @@
-import Share, { MultipleOptions, Options } from 'react-native-share';
+import Share from 'react-native-share';
+import { ShareOptions } from 'react-native-share';
 import { Pool } from '~/models/Pool';
 import { TempCsvRepo } from '~/repository/TempCsvRepo';
 
@@ -32,7 +33,7 @@ export namespace ExportService {
 
         const sharableURL = `file://${filePath}`;
 
-        const options: Options | MultipleOptions = {
+        const options: ShareOptions = {
             title: 'pooldash export',
             subject: 'pooldash export',
             url: sharableURL,
@@ -67,7 +68,7 @@ export namespace ExportService {
         const sharableURL = `data:text/comma-separated-values;base64,${fileData}`;
         const fileName = `pd-${new Date().toISOString()}`;
 
-        const options: Options = {
+        const options: ShareOptions = {
             url: sharableURL,
             type: 'text/csv',
             filename: fileName,
@@ -76,7 +77,7 @@ export namespace ExportService {
         return await share(options);
     };
 
-    const share = async (options: Options): Promise<void> => {
+    const share = async (options: ShareOptions): Promise<void> => {
         try {
             await Share.open(options);
         } catch (e) {

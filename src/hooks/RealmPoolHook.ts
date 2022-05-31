@@ -1,5 +1,4 @@
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import ApolloClient from 'apollo-client';
+import { ApolloClient, useApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import Realm from 'realm';
 import { LogEntry } from '~/models/logs/LogEntry';
@@ -10,8 +9,6 @@ import { FormulaKey } from '~/models/recipe/FormulaKey';
 import { Database } from '~/repository/Database';
 import { RecipeService } from '~/services/RecipeService';
 import { Util } from '~/services/Util';
-
-import { useApolloClient } from '@apollo/react-hooks';
 
 import { RealmUtil } from '../services/RealmUtil';
 

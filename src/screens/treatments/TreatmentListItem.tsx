@@ -100,7 +100,7 @@ export const TreatmentListItem: React.FunctionComponent<TreatmentListItemProps> 
                                 />
                             </Conditional>
                             <Conditional condition={ t.type !== 'calculation' }>
-                                <Image style={ styles.circleImage } source={ leftImageSource } width={ 28 } height={ 28 } />
+                                <Image style={ styles.circleImage } source={ leftImageSource } />
                                 <Conditional condition={ ['dryChemical', 'liquidChemical'].some((x) => t.type === x) }>
                                     <PDText type="default" color="black" style={ styles.addLabel }>
                                         Add
@@ -169,6 +169,8 @@ const styles = StyleSheet.create({
     circleImage: {
         marginRight: 10,
         marginBottom: 16,
+        width: 28,
+        height: 28,
     },
     addLabel: {
         fontSize: 18,

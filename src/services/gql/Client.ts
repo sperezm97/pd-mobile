@@ -1,6 +1,5 @@
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+
 import { Config } from '../Config/AppConfig';
 
 export const getApolloClient = () => {

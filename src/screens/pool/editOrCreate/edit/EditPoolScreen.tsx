@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SectionList, StyleSheet } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ModalHeader from '~/components/headers/ModalHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
@@ -21,7 +21,7 @@ export const EditPoolScreen: React.FunctionComponent = () => {
     const { pool } = useEntryPool();
     const dispatchThunk = useThunkDispatch();
     const editPoolSectionInfo = useEditPool(pool, toggleVisible);
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     const theme = useTheme();
 
     /// Whenever the pool context changes, persist them in the db:

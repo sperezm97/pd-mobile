@@ -1,10 +1,8 @@
 // Script that pulls the latest version of each recipe for caching.
 import { DevConfig, ProdConfig } from '../../Config/Network';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { devFormulaMap, FormulaMap, prodFormulaMap } from './masterMap';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'node-fetch';
-import { createHttpLink } from 'apollo-link-http';
 import { FormulaAPI } from '../../gql/FormulaAPI';
 import { LatestFormula } from '../../gql/generated/LatestFormula';
 import { RS } from '../../RecipeUtil';

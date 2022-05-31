@@ -20,7 +20,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ReadingListItem, ReadingState } from './ReadingListItem';
 import { ReadingListHeader } from './ReadingListHeader';
 import { PlayButton } from '~/components/buttons/PlayButton';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStandardStatusBar } from '~/hooks/useStatusBar';
 
 export const ReadingListScreen: React.FC = () => {
@@ -31,13 +31,13 @@ export const ReadingListScreen: React.FC = () => {
     const { setOptions, navigate } = useNavigation<PDStackNavigationProps>();
     const theme = useTheme();
     const lastLogEntry = useLastLogEntryHook(pool?.objectId ?? '');
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     useStandardStatusBar();
 
     const keyboardAccessoryViewId = 'wowThisIsSomeReallyUniqueTextReadingListKeyboard';
 
     React.useEffect(() => {
-        setOptions({ gestureResponseDistance: { horizontal: 5 } });
+        setOptions({ gestureResponseDistance: 5 });
         if (recipe) {
             const readingsOnByDefault = new Set<string>();
             if (lastLogEntry) {

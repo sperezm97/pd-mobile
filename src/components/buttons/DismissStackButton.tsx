@@ -13,7 +13,7 @@ export const DismissStackButton: React.FunctionComponent<DismissStackButtonProps
     return (
         <View style={ styles.container }>
             <TouchableScale activeScale={ 0.97 } onPress={ props.handleBackPressed }>
-                <Image style={ styles.backButtonImage } source={ images.closeIcon } width={ 21 } height={ 21 } />
+                <Image style={ styles.backButtonImage } source={ images.closeIcon } />
             </TouchableScale>
         </View>
     );
@@ -23,5 +23,8 @@ const styles = StyleSheet.create({
     container: {
         // backgroundColor: 'pink',
     },
-    backButtonImage: {},
+    backButtonImage: {
+        width: 21,
+        height: 21,
+    },
 });

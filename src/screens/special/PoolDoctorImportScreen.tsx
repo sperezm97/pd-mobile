@@ -22,7 +22,7 @@ import { useStandardStatusBar } from '~/hooks/useStatusBar';
 import { Config } from '~/services/Config/AppConfig';
 import { PDButtonSolid } from '~/components/buttons/PDButtonSolid';
 import { SVG } from '~/assets/images';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 export const PoolDoctorImportScreen: React.FC = () => {
@@ -36,7 +36,7 @@ export const PoolDoctorImportScreen: React.FC = () => {
     useStandardStatusBar();
 
     const theme = useTheme();
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     const { navigate } = useNavigation<PDStackNavigationProps>();
 
     const goHome = () => {

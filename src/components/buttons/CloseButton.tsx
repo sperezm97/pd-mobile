@@ -18,7 +18,7 @@ export const CloseButton: React.FunctionComponent<CloseButtonProps> = (props) =>
     return (
         <View style={ containerStyle }>
             <TouchableScale style={ styles.innerContainer } activeScale={ 0.97 } onPress={ onPress }>
-                <Image style={ [styles.image, { tintColor: theme.colors[backIconColor] } ] } source={ images.closeBlue } width={ 32 } height={ 32 } />
+                <Image style={ [styles.image, { tintColor: theme.colors[backIconColor] } ] } source={ images.closeBlue } />
             </TouchableScale>
         </View>
     );
@@ -31,5 +31,7 @@ const styles = StyleSheet.create({
     image: {
         marginHorizontal: 8,
         marginBottom: 8,
+        width: 32,
+        height: 32,
     },
 });

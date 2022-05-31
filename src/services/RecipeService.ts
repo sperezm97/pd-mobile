@@ -1,5 +1,3 @@
-import { NormalizedCacheObject } from 'apollo-cache-inmemory';
-import ApolloClient from 'apollo-client';
 import { Pool } from '~/models/Pool';
 import { Recipe } from '~/models/recipe/Recipe';
 import { FormulaKey } from '~/models/recipe/FormulaKey';
@@ -11,6 +9,7 @@ import { FormulaAPI } from './gql/FormulaAPI';
 import { RS } from './RecipeUtil';
 import { WaterTypeValue } from '~/models/Pool/WaterType';
 import { Util } from './Util';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 export class RecipeService {
     private static fallbackFormula = Config.preloadedFormulas.formulas[0];

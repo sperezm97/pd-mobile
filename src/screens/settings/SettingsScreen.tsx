@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSectionList } from '~/components/list/PDSectionList';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
@@ -10,7 +10,7 @@ import { useSettings } from './useSettings';
 export const SettingsScreen = () => {
     const settingsSections = useSettings();
     useStandardStatusBar();
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
 
     return (
         <PDSafeAreaView bgColor="white" forceInset={ { bottom: 'never' } }>

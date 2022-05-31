@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { connect } from 'react-redux';
-import SafeAreaView, { useSafeArea } from 'react-native-safe-area-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ChartCard } from '~/components/charts/ChartCard';
 import { DateRangeSelector, DateRange } from '~/components/DateRangeSelector';
@@ -16,6 +16,7 @@ import { PDNavParams } from '~/navigator/shared';
 import { useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
+import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 
 interface PoolHistoryProps {
     /**  */
@@ -34,7 +35,7 @@ const PoolHistoryComponent: React.FunctionComponent<PoolHistoryProps> = (props) 
     const [dateRange, setDateRange] = React.useState<DateRange>('1M');
     const [chartData, setChartData] = React.useState<ChartCardViewModel[]>([]);
     const { goBack } = useNavigation<StackNavigationProp<PDNavParams, 'PoolHistory'>>();
-    const insets = useSafeArea();
+    const insets = useSafeAreaInsets();
     const theme = useTheme();
 
     const { selectedPool } = props;
@@ -58,7 +59,7 @@ const PoolHistoryComponent: React.FunctionComponent<PoolHistoryProps> = (props) 
     });
 
     return (
-        <SafeAreaView style={ { backgroundColor: theme.colors.white, flex: 1 } } forceInset={ { bottom: 'never' } }>
+        <PDSafeAreaView style={ { backgroundColor: theme.colors.white, flex: 1 } } forceInset={ { bottom: 'never' } }>
             <ScreenHeader hasBackButton hasBottomLine={ false } handlePressedBack={ handleBackPress } textType="heading" color="blue">Trends</ScreenHeader>
             <PDView style={ styles.header } borderColor="border">
                 <DateRangeSelector
@@ -70,7 +71,7 @@ const PoolHistoryComponent: React.FunctionComponent<PoolHistoryProps> = (props) 
             <ScrollView style={ [styles.scrollView, { backgroundColor: theme.colors.background }] } contentInset={ { bottom: insets.bottom } }>
                 <View style={ styles.chartContainer }>{charts}</View>
             </ScrollView>
-        </SafeAreaView>
+        </PDSafeAreaView>
     );
 };
 
