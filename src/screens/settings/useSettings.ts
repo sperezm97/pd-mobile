@@ -93,7 +93,7 @@ export const useSettings = () => {
                 {
                     id: 'pooldashPlus',
                     image: 'IconPooldashPlus',
-                    label: 'Subscribe',
+                    label: 'About',
                     valueColor: 'black',
 
                     onPress: handleNavigationSubscription,
