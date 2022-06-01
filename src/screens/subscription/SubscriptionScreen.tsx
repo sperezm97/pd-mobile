@@ -39,7 +39,10 @@ export const SubscriptionScreen: React.FC = () => {
                     Subscribe
                 </PDText>
                 <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
-                    If you enjoy this app, please support me as I build it. The app is totally free, so this is based on the honor-system.
+                    Many people who enjoy using Pooldash also enjoy this Patreon page! However, per section 3.1.1 of the App Store Review Guidelines, this Patreon is in no way associated with any digital content here, including the app itself.
+                </PDText>
+                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                    Let's all thank the App Review team for this clarification!
                 </PDText>
                 <PDView style={ styles.buttonContainer }>
                     <PDButton onPress={ handlePatreonPressed } bgColor="blue">
