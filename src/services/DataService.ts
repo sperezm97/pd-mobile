@@ -39,7 +39,7 @@ export namespace DataService {
             imperial gallons,\
             ${pool.waterType},\
             ${pool.wallType},\
-            ${pool.recipeKey ?? ''},\
+            ${pool.formulaId ?? ''},\
             ${pool.objectId}`;
         const logs = Database.loadLogEntriesForPool(pool.objectId, null, true);
         logs.forEach((entry) => {
@@ -52,7 +52,7 @@ export namespace DataService {
         let result = `\nlog_entry,\
             ${new Date(logEntry.userTS).toISOString()},\
             ${logEntry.notes ?? '---'},\
-            ${logEntry.recipeKey},\
+            ${logEntry.formulaId},\
             ${logEntry.objectId}`;
         logEntry.readingEntries.forEach((re) => {
             result += `\nreading,\

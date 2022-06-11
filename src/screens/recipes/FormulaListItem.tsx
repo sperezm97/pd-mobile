@@ -2,16 +2,15 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 // @ts-ignore
 import TouchableScale from 'react-native-touchable-scale';
-import { SVG } from '~/assets/images';
 
 import { PDText } from '~/components/PDText';
 import { PDSpacing } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { FormulaMeta } from '~/models/recipe/FormulaMeta';
+import { Formula } from '~/formulas/models/Formula';
 
 interface FormulaListItemProps {
-    formula: FormulaMeta;
-    onFormulaSelected: (formula: FormulaMeta) => void;
+    formula: Formula;
+    onFormulaSelected: (formula: Formula) => void;
     isActiveFormula: boolean;
 }
 
@@ -20,7 +19,7 @@ export const FormulaListItem: React.FC<FormulaListItemProps> = (props) => {
         props.onFormulaSelected(props.formula);
     };
 
-    const recipe = props.formula;
+    const { formula } = props;
 
     return (
         <TouchableScale onPress={ handleButtonPressed } activeScale={ 0.98 }>
@@ -28,20 +27,11 @@ export const FormulaListItem: React.FC<FormulaListItemProps> = (props) => {
                 <PDView style={ { flex: 1 } }>
                     <PDView style={ { flexDirection: 'row', marginBottom: PDSpacing.xs } }>
                         <PDText type="bodyBold" color="black">
-                            {recipe.name}{'  '}
+                            {formula.name}{'  '}
                         </PDText>
-                        {
-                            recipe.isOfficial && <SVG.IconBadge width={ 14 } height={ 14 } style={ { marginTop: 'auto', marginBottom: 'auto' } } />
-                        }
                     </PDView>
-                    {
-                        !recipe.isOfficial &&
-                            <PDText type="buttonSmall" color="red" style={ { marginBottom: PDSpacing.xs } }>
-                                #{recipe.id}
-                            </PDText>
-                    }
                     <PDText type="tooltip" color="greyDark">
-                        {recipe.desc}{' '}
+                        {formula.description}{' '}
                     </PDText>
                 </PDView>
             </PDView>

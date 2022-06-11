@@ -2,17 +2,17 @@ import * as React from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
 import { PDText } from '~/components/PDText';
 import { PDView } from '~/components/PDView';
-import { Recipe } from '~/models/recipe/Recipe';
+import { Formula } from '~/formulas/models/Formula';
 
 interface ReadingListFooterProps {
-    recipe: Recipe | null;
+    formula: Formula | null;
     pressedChangeRecipe: () => void;
 }
 
 export const ReadingListFooter: React.FunctionComponent<ReadingListFooterProps> = (props) => {
     const [isChangeButtonPressed, setIsChangeButtonPressed] = React.useState(false);
 
-    if (!props.recipe) {
+    if (!props.formula) {
         return <PDView />;
     }
 
@@ -23,7 +23,7 @@ export const ReadingListFooter: React.FunctionComponent<ReadingListFooterProps> 
             <PDText type="default" color="greyDark" style={ styles.recipeNameIntroText }>
                 Current formula:{' '}
                 <PDText type="default" color="greyDark" style={ styles.recipeNameText }>
-                    {props.recipe.name}
+                    {props.formula.name}
                 </PDText>
             </PDText>
             <PDView style={ styles.topRow }>

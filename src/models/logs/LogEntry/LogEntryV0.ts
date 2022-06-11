@@ -1,6 +1,5 @@
 import { ReadingEntry } from '../ReadingEntry';
 import { TreatmentEntry } from '../TreatmentEntry';
-import { FormulaKey } from '../../recipe/FormulaKey';
 
 /**
  * Represents readingEntries and treatmentEntries for a given pool
@@ -22,7 +21,7 @@ export class LogEntryV0 {
     treatmentEntries!: TreatmentEntry[];
 
     // The unique id of the recipe
-    recipeKey!: FormulaKey;
+    recipeKey!: string;
 
     // Any special thoughts the user had about this log entry.
     notes?: string;

@@ -1,4 +1,5 @@
-import { TreatmentType } from './recipe/Treatment';
+
+import { TreatmentType } from '~/formulas/models/Treatment';
 import { Units } from '~/models/TreatmentUnits';
 
 /// Represents a custom volumetric unit defined by a user.

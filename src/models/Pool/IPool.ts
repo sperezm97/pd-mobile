@@ -1,3 +1,4 @@
+import { FormulaID } from '~/formulas/models/FormulaID';
 import { WallTypeValue } from './WallType';
 import { WaterTypeValue } from './WaterType';
 
@@ -8,7 +9,8 @@ export interface IPool {
 
     gallons: number;
     name: string;
-    recipeKey?: string;
+    formulaId?: FormulaID;
+    recipeKey?: string;         // todo: remove me
     waterType: WaterTypeValue;
     wallType: WallTypeValue;
     email?: string;

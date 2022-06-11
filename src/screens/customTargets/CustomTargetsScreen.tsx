@@ -5,9 +5,8 @@ import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
-import { useLoadRecipeHook } from '~/hooks/RealmPoolHook';
-import { TargetRange } from '~/models/recipe/TargetRange';
-import { RecipeService } from '~/services/RecipeService';
+import { TargetRange } from '~/formulas/models/TargetRange';
+import { useLoadFormulaHook } from '~/hooks/RealmPoolHook';
 
 import CustomTargetsItem from './CustomTargetsItem';
 import { usePoolFromAmbiguousSource } from './PoolHelper';
@@ -15,9 +14,9 @@ import { usePoolFromAmbiguousSource } from './PoolHelper';
 export const CustomTargetsScreen : React.FC = () => {
     const selectedPool = usePoolFromAmbiguousSource();
 
-    const recipe = useLoadRecipeHook(selectedPool?.recipeKey || RecipeService.defaultFormulaKey);
+    const recipe = useLoadFormulaHook(selectedPool?.formulaId);
     const theme = useTheme();
-    const targets = recipe?.custom ?? [];
+    const targets = recipe?.targets ?? [];  // TODO: load me for real!!
 
     if (selectedPool.objectId === 'invalid_pool_id') { console.error('loaded invalid pool on targets screen!'); }
 

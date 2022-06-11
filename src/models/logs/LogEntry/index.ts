@@ -1,1 +1,1 @@
-export { LogEntryV3 as LogEntry } from './LogEntryV3';
+export { LogEntryV4 as LogEntry } from './LogEntryV4';

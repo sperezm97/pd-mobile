@@ -7,7 +7,7 @@ import TouchableScale from 'react-native-touchable-scale';
 import { ChartCard } from '~/components/charts/ChartCard';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDText } from '~/components/PDText';
-import { useLoadRecipeHook, useRealmPoolHistoryHook } from '~/hooks/RealmPoolHook';
+import { useLoadFormulaHook, useRealmPoolHistoryHook } from '~/hooks/RealmPoolHook';
 import { useStandardStatusBar } from '~/hooks/useStatusBar';
 import { LogEntry } from '~/models/logs/LogEntry';
 import { PDStackNavigationProps } from '~/navigator/shared';
@@ -16,7 +16,6 @@ import { updatePool } from '~/redux/selectedPool/Actions';
 import { Database } from '~/repository/Database';
 import { EmailService } from '~/services/EmailService';
 import { Haptic } from '~/services/HapticService';
-import { RecipeService } from '~/services/RecipeService';
 import { Util } from '~/services/Util';
 
 import { useNavigation } from '@react-navigation/native';
@@ -43,7 +42,7 @@ export const PoolScreen: React.FC = () => {
 
     const [selectedHistoryCellIds, setSelectedHistoryCellIds] = React.useState<string[]>([]);
 
-    const recipe = useLoadRecipeHook(selectedPool?.recipeKey || RecipeService.defaultFormulaKey);
+    const formula = useLoadFormulaHook(selectedPool?.formulaId);
     const selectedFormulaKey = useTypedSelector((state) => state.selectedFormulaKey);
     const chartData = usePoolChart();
 
@@ -62,7 +61,7 @@ export const PoolScreen: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedFormulaKey]);
 
-    if (!selectedPool || !recipe) {
+    if (!selectedPool || !formula) {
         return <PDView  />;
     }
 

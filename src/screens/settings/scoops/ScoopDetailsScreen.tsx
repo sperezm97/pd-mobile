@@ -10,7 +10,7 @@ import { PDTextInput } from '~/components/inputs/PDTextInput';
 import { PDText } from '~/components/PDText';
 import { useContrastStatusBar } from '~/hooks/useStatusBar';
 import { DeviceSettings } from '~/models/DeviceSettings';
-import { Treatment, TreatmentType } from '~/models/recipe/Treatment';
+import { Treatment, TreatmentType } from '~/formulas/models/Treatment';
 import { Scoop } from '~/models/Scoop';
 import { DryChemicalUnits, Units, WetChemicalUnits } from '~/models/TreatmentUnits';
 import { dispatch, useTypedSelector } from '~/redux/AppState';

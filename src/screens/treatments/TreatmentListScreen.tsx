@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Keyboard, LayoutAnimation, SectionListData, StyleSheet, View } from 'react-native';
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { KeyboardButton } from '~/components/buttons/KeyboardButton';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useLoadRecipeHook, useRealmPoolTargetRangesForPool } from '~/hooks/RealmPoolHook';
+import { useLoadFormulaHook, useRealmPoolTargetRangesForPool } from '~/hooks/RealmPoolHook';
 import { LogEntry } from '~/models/logs/LogEntry';
 import { DryChemicalUnits, Units, WetChemicalUnits } from '~/models/TreatmentUnits';
 import { PDNavParams } from '~/navigator/shared';
@@ -15,12 +14,12 @@ import { dispatch, useTypedSelector } from '~/redux/AppState';
 import { clearPickerState } from '~/redux/picker/Actions';
 import { clearReadings } from '~/redux/readingEntries/Actions';
 import { Database } from '~/repository/Database';
-import { CalculationService } from '~/services/CalculationService';
+import { CalculationResult, CalculationService } from '~/services/CalculationService';
 import { Config } from '~/services/Config/AppConfig';
 import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
 import { Haptic } from '~/services/HapticService';
 import { RealmUtil } from '~/services/RealmUtil';
-import { RecipeService } from '~/services/RecipeService';
+import { FormulaService } from '~/services/FormulaService';
 import { Converter } from '~/services/TreatmentUnitsService';
 import { Util } from '~/services/Util';
 
@@ -44,14 +43,14 @@ export const TreatmentListScreen: React.FC = () => {
     const pool = useTypedSelector(state => state.selectedPool);
     const pickerState = useTypedSelector((state) => state.pickerState);
     const { ds, updateDS } = useDeviceSettings();
-    const recipeKey = pool?.recipeKey || RecipeService.defaultFormulaKey;
+    const formulaId = pool?.formulaId || FormulaService.defaultFormulaId;
     const [treatmentStates, setTreatmentStates] = React.useState<TreatmentState[]>([]);
     const [hasSelectedAnyTreatments, setHasSelectedAnyTreatments] = React.useState(false);
     const [notes, setNotes] = React.useState('');
     const { navigate } = useNavigation<StackNavigationProp<PDNavParams>>();
     // I hate this... it's dirty. We should move this into the picker screen maybe?
     const [concentrationTreatmentVar, updateConcentrationTreatment] = React.useState<string | null>(null);
-    const recipe = useLoadRecipeHook(recipeKey);
+    const formula = useLoadFormulaHook(formulaId);
     const targetRangeOverridesForPool = useRealmPoolTargetRangesForPool(pool?.objectId ?? null);
     const routesInNavStack = useNavigationState(state => state.routes.map(r => r.name));
     const theme = useTheme();
@@ -111,7 +110,79 @@ export const TreatmentListScreen: React.FC = () => {
         }
     });
 
-    if (!recipe || !pool) {
+    React.useEffect(() => {
+        if (!pool || !formula) {
+            return;
+        }
+
+        const handleCalculatorResults = (res: CalculationResult[]) => {
+            const tes = CalculationService.getTreatmentEntriesFromCalculationResult(res, formula);
+
+            const lastUnits = ds.treatments.units;
+            const tss: TreatmentState[] = tes
+                .map((te) => {
+                    const t = TreatmentListHelpers.getTreatmentFromFormula(te.var, formula);
+                    if (t === null) {
+                        return null;
+                    }
+                    const defaultDecimalPlaces = 1;
+
+                    let ounces = te.ounces || 0;
+                    const baseConcentration = t.concentration || 100;
+                    const concentrationOverride = TreatmentListHelpers.getConcentrationForTreatment(t.var, ds);
+
+                    if (concentrationOverride) {
+                        ounces = (ounces * baseConcentration) / concentrationOverride;
+                    }
+
+                    let units: Units = 'ounces';
+                    let value = ounces;
+                    const scoop = TreatmentListHelpers.getScoopForTreatment(t.var, allScoops);
+
+                    if (scoop) {
+                        // If we have a saved scoop, start with that:
+                        if (t.type === 'dryChemical') {
+                            value = Converter.dry(value, 'ounces', 'scoops', scoop);
+                        } else if (t.type === 'liquidChemical') {
+                            value = Converter.wet(value, 'ounces', 'scoops', scoop);
+                        }
+                    } else if (lastUnits[t.var]) {
+                        // Otherwise, try to start w/ the same units as last time
+                        units = lastUnits[t.var] as Units;
+                        if (units === 'scoops' && !scoop) {
+                            /// If the scoop has been deleted
+                            units = 'ounces';
+                        }
+                        if (t.type === 'dryChemical') {
+                            value = Converter.dry(value, 'ounces', units as DryChemicalUnits, scoop);
+                        } else if (t.type === 'liquidChemical') {
+                            value = Converter.wet(value, 'ounces', units as WetChemicalUnits, scoop);
+                        }
+                    }
+
+                    return {
+                        treatment: t,
+                        isOn: t.type === 'calculation',
+                        value: value.toFixed(defaultDecimalPlaces),
+                        units: units as Units,
+                        ounces,
+                        decimalPlaces: defaultDecimalPlaces,
+                        concentration: concentrationOverride || baseConcentration,
+                    };
+                })
+                .filter(Util.notEmpty);
+
+            setTreatmentStates(tss);
+            setHaveCalculationsProcessed(true);
+        };
+
+        const targets = TargetsHelper.resolveRangesForPool(formula, pool.wallType, targetRangeOverridesForPool);
+        const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readings, targets);
+        const formulaResults = CalculationService.run(formulaRunRequest);
+        handleCalculatorResults(formulaResults);
+    }, [allScoops, ds, formula, pool, readings, targetRangeOverridesForPool]);
+
+    if (!formula || !pool) {
         return <View />;
     }
 
@@ -142,7 +213,7 @@ export const TreatmentListScreen: React.FC = () => {
         const ts = Util.generateTimestamp();
         const tes = CalculationService.mapTreatmentStatesToTreatmentEntries(finalTreatmentStates);
 
-        const readingEntries = RealmUtil.createReadingEntriesFromReadingValues(readings, recipe);
+        const readingEntries = RealmUtil.createReadingEntriesFromReadingValues(readings, formula);
         const logEntry = LogEntry.make(     // TODO: make these named / keyed properties.
             id,
             pool.objectId,
@@ -151,8 +222,8 @@ export const TreatmentListScreen: React.FC = () => {
             null,
             readingEntries,
             tes,
-            recipeKey,
-            recipe.name,
+            formulaId,
+            formula.name,
             notes,
             null
         );
@@ -168,67 +239,6 @@ export const TreatmentListScreen: React.FC = () => {
         dispatch(clearReadings());
         const navigateBackScreen = routesInNavStack.includes('PoolScreen') ? 'PoolScreen' : 'Home';
         navigate(navigateBackScreen);
-    };
-
-    const onMessage = (event: WebViewMessageEvent) => {
-        const tes = CalculationService.getTreatmentEntriesFromWebviewMessage(event, recipe);
-
-        const lastUnits = ds.treatments.units;
-        const tss: TreatmentState[] = tes
-            .map((te) => {
-                const t = TreatmentListHelpers.getTreatmentFromRecipe(te.var, recipe);
-                if (t === null) {
-                    return null;
-                }
-                const defaultDecimalPlaces = 1;
-
-                let ounces = te.ounces || 0;
-                const baseConcentration = t.concentration || 100;
-                const concentrationOverride = TreatmentListHelpers.getConcentrationForTreatment(t.var, ds);
-
-                if (concentrationOverride) {
-                    ounces = (ounces * baseConcentration) / concentrationOverride;
-                }
-
-                let units: Units = 'ounces';
-                let value = ounces;
-                const scoop = TreatmentListHelpers.getScoopForTreatment(t.var, allScoops);
-
-                if (scoop) {
-                    // If we have a saved scoop, start with that:
-                    if (t.type === 'dryChemical') {
-                        value = Converter.dry(value, 'ounces', 'scoops', scoop);
-                    } else if (t.type === 'liquidChemical') {
-                        value = Converter.wet(value, 'ounces', 'scoops', scoop);
-                    }
-                } else if (lastUnits[t.var]) {
-                    // Otherwise, try to start w/ the same units as last time
-                    units = lastUnits[t.var] as Units;
-                    if (units === 'scoops' && !scoop) {
-                        /// If the scoop has been deleted
-                        units = 'ounces';
-                    }
-                    if (t.type === 'dryChemical') {
-                        value = Converter.dry(value, 'ounces', units as DryChemicalUnits, scoop);
-                    } else if (t.type === 'liquidChemical') {
-                        value = Converter.wet(value, 'ounces', units as WetChemicalUnits, scoop);
-                    }
-                }
-
-                return {
-                    treatment: t,
-                    isOn: t.type === 'calculation',
-                    value: value.toFixed(defaultDecimalPlaces),
-                    units: units as Units,
-                    ounces,
-                    decimalPlaces: defaultDecimalPlaces,
-                    concentration: concentrationOverride || baseConcentration,
-                };
-            })
-            .filter(Util.notEmpty);
-
-        setTreatmentStates(tss);
-        setHaveCalculationsProcessed(true);
     };
 
     const handleIconPressed = (varName: string) => {
@@ -320,7 +330,7 @@ export const TreatmentListScreen: React.FC = () => {
     const handleTreatmentNameButtonPressed = (varName: string) => {
         Haptic.light();
 
-        const t = TreatmentListHelpers.getTreatmentFromRecipe(varName, recipe);
+        const t = TreatmentListHelpers.getTreatmentFromFormula(varName, formula);
         const concentration =
             TreatmentListHelpers.getConcentrationForTreatment(varName, ds) || t?.concentration || 100;
         updateConcentrationTreatment(varName);
@@ -335,9 +345,6 @@ export const TreatmentListScreen: React.FC = () => {
         navigate('PickerScreen', pickerProps);
     };
 
-    const targets = TargetsHelper.resolveRangesForPool(recipe, pool.wallType, targetRangeOverridesForPool);
-    const htmlString = CalculationService.getHtmlStringForLocalHermes(recipe, pool, readings, targets);
-
     const sections: SectionListData<TreatmentState>[] = [
         {
             data: [],
@@ -351,7 +358,7 @@ export const TreatmentListScreen: React.FC = () => {
 
     let completed: TreatmentState[] = [];
     let countedTreatmentStates: TreatmentState[] = [];
-    if (recipe) {
+    if (formula) {
         countedTreatmentStates = treatmentStates.filter((ts) => ts.treatment.type !== 'calculation');
         completed = countedTreatmentStates.filter((ts) => ts.isOn);
     }
@@ -407,7 +414,6 @@ export const TreatmentListScreen: React.FC = () => {
                     }
                 } }
             />
-            <WebView containerStyle={ styles.webview } onMessage={ onMessage } source={ { html: htmlString } } androidHardwareAccelerationDisabled />
             <PDProgressBar
                 progress={ progress }
                 foregroundColor={ theme.colors.purple }

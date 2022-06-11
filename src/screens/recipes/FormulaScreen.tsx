@@ -1,30 +1,26 @@
-import { format } from 'date-fns';
 import * as React from 'react';
 import {
-    Linking, ScrollView, StyleSheet, TouchableHighlight, View,
+    ScrollView, StyleSheet,
 } from 'react-native';
 import { BoringButton } from '~/components/buttons/BoringButton';
 import { PDText } from '~/components/PDText';
-import { useLoadRecipeHook } from '~/hooks/RealmPoolHook';
-import { FormulaKey } from '~/models/recipe/FormulaKey';
+import { useLoadFormulaHook } from '~/hooks/RealmPoolHook';
 import { PDCardNavigatorParams } from '~/navigator/PDCardNavigator';
 import { PDStackNavigationProps } from '~/navigator/shared';
 import { dispatch } from '~/redux/AppState';
-import { updateSelectedRecipe } from '~/redux/selectedRecipe/Actions';
-import { Config } from '~/services/Config/AppConfig';
-import { RS } from '~/services/RecipeUtil';
+import { updateSelectedFormula } from '~/redux/selectedFormula/Actions';
 
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
-import { SVG } from '~/assets/images';
 import { PDView } from '~/components/PDView';
 import { useContrastStatusBar } from '~/hooks/useStatusBar';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
+import { FormulaID } from '~/formulas/models/FormulaID';
 
 export interface FormulaDetailsNavParams {
-    formulaKey: FormulaKey;
+    formulaId: FormulaID;
     prevScreen: 'ReadingList' | 'EditOrCreatePoolScreen' | 'PoolScreen';
 }
 
@@ -32,8 +28,7 @@ export const FormulaScreen: React.FC = () => {
     const { navigate } = useNavigation<PDStackNavigationProps>();
     const { params } = useRoute<RouteProp<PDCardNavigatorParams, 'FormulaDetails'>>();
 
-    const formula = useLoadRecipeHook(params.formulaKey);
-    const [isWebButtonPressed, setIsWebButtonPressed] = React.useState(false);
+    const formula = useLoadFormulaHook(params.formulaId);
 
     const theme = useTheme();
     useContrastStatusBar();
@@ -42,20 +37,10 @@ export const FormulaScreen: React.FC = () => {
         return <PDView bgColor="background" />;
     }
 
-    const isOfficial = RS.isOfficial(formula);
-
-    const meta = RS.toMeta(formula);
-
     const handleSelectFormulaPressed = () => {
-        dispatch(updateSelectedRecipe(params.formulaKey));
+        dispatch(updateSelectedFormula(params.formulaId));
         navigate(params.prevScreen);
     };
-
-    const handleViewDetailsPressed = () => {
-        Linking.openURL(`${Config.web_app_url}/formula/${meta.id}/edit`);
-    };
-
-    const webButtonStyles = isWebButtonPressed ? styles.recipeLinkPressed : styles.recipeLinkNormal;
 
     const readingList = formula.readings.map((r) => (
         <PDText type="content" style={ styles.textBody } key={ `r:${formula.readings.indexOf(r)}` }>
@@ -67,7 +52,6 @@ export const FormulaScreen: React.FC = () => {
             • {t.name}
         </PDText>
     ));
-    const updatedText = format(formula.ts, '• MMM d, y') + format(formula.ts, '  //  h:mma').toLowerCase();
 
     const bottomBorderStyle = { borderBottomColor: theme.colors.border, borderBottomWidth: 2 };
     const scrollViewStyle = { backgroundColor: theme.colors.blurredOrange };
@@ -81,16 +65,7 @@ export const FormulaScreen: React.FC = () => {
                         <PDText type="heading" color="black">
                             {formula.name}{'  '}
                         </PDText>
-                        {
-                            isOfficial && <SVG.IconBadge width={ 20 } height={ 20 } style={ { marginTop: 'auto', marginBottom: 'auto' } } />
-                        }
                     </PDView>
-                    {
-                        !isOfficial &&
-                            <PDText type="buttonSmall" color="red" style={ { marginBottom: PDSpacing.xs } }>
-                                #{formula.id}
-                            </PDText>
-                    }
                 </PDView>
                 <ScrollView style={ [bottomBorderStyle, scrollViewStyle] } contentInset={ { top: 12, bottom: 12 } }>
                     <PDText type="content" style={ styles.textBody }>
@@ -104,16 +79,10 @@ export const FormulaScreen: React.FC = () => {
                         Treatments
                     </PDText>
                     {treatmentList}
-                    <PDText type="subHeading" color="greyDark" style={ styles.textTitle }>
-                        Last Updated
-                    </PDText>
-                    <PDText type="content" style={ styles.textBody }>
-                        {updatedText}
-                    </PDText>
-                    <PDText type="subHeading" color="greyDark" style={ styles.textTitle }>
+                    {/* <PDText type="subHeading" color="greyDark" style={ styles.textTitle }>
                         View calculations
-                    </PDText>
-                    <View style={ styles.topRow }>
+                    </PDText> */}
+                    {/* <View style={ styles.topRow }>
                         <TouchableHighlight
                             onPressIn={ () => setIsWebButtonPressed(true) }
                             onPressOut={ () => setIsWebButtonPressed(false) }
@@ -122,7 +91,7 @@ export const FormulaScreen: React.FC = () => {
                                 Open in your browser
                             </PDText>
                         </TouchableHighlight>
-                    </View>
+                    </View> */}
                 </ScrollView>
                 <BoringButton
                     containerStyles={ [styles.button, { backgroundColor: theme.colors.orange }] }

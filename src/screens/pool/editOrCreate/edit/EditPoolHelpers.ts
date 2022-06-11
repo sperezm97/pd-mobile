@@ -2,7 +2,7 @@ import { PDColor } from '~/components/PDTheme';
 import { EntryPoolElements } from '../entryPoolValues/EntryPoolHelpers';
 
 export type EditPoolField = EntryPoolElements
-    | 'recipe'
+    | 'formula'
     | 'customTargets'
     | 'exportData'
     | 'deletePool';

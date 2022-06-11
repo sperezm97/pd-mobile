@@ -3,12 +3,16 @@ import { LogEntryV0 } from '~/models/logs/LogEntry/LogEntryV0';
 import { LogEntryV1 } from '~/models/logs/LogEntry/LogEntryV1';
 import { LogEntryV2 } from '~/models/logs/LogEntry/LogEntryV2';
 import { LogEntryV3 } from '~/models/logs/LogEntry/LogEntryV3';
+import { LogEntryV4 } from '~/models/logs/LogEntry/LogEntryV4';
 import { ReadingEntry } from '~/models/logs/ReadingEntry';
 import { TreatmentEntry } from '~/models/logs/TreatmentEntry';
 import { PoolV0 } from '~/models/Pool/PoolV0';
 import { PoolV1 } from '~/models/Pool/PoolV1';
 import { PoolV2 } from '~/models/Pool/PoolV2';
+import { PoolV3 } from '~/models/Pool/PoolV3';
 import { TargetRangeOverride } from '~/models/Pool/TargetRangeOverride';
+import { migration5 } from './migrations/5';
+import { migration6 } from './migrations/6';
 
 /**
  * List of schemas for the Realm database. This array should be updated every
@@ -39,16 +43,15 @@ const schemas: Realm.Configuration[] = [
         schema: [PoolV2.schema, LogEntryV3.schema, ReadingEntry.schema, TreatmentEntry.schema, TargetRangeOverride.schema],
         schemaVersion: 5,
         migration: (oldRealm, newRealm) => {
-            if (oldRealm.schemaVersion < 5) {
-                const oldLogEntries = oldRealm.objects<LogEntryV2>('LogEntry');
-                const newLogEntries = newRealm.objects<LogEntryV3>('LogEntry');
-
-                // loop through all objects and set the name property in the new schema
-                for (let i = 0; i < oldLogEntries.length; i++) {
-                    newLogEntries[i].clientTS = oldLogEntries[i].ts;
-                    newLogEntries[i].userTS = oldLogEntries[i].ts;
-                }
-            }
+            migration5(oldRealm, newRealm);
+        },
+    },
+    {
+        schema: [PoolV3.schema, LogEntryV4.schema, ReadingEntry.schema, TreatmentEntry.schema, TargetRangeOverride.schema],
+        schemaVersion: 6,
+        migration: (oldRealm, newRealm) => {
+            migration5(oldRealm, newRealm);
+            migration6(oldRealm, newRealm);
         },
     },
 ];

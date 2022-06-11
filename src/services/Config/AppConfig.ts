@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { preloadedDev, preloadedProd } from '../formulas/preload/importable';
+import { FormulaID } from '~/formulas/models/FormulaID';
 import { DevConfig, ProdConfig } from './Network';
 
 export class Config {
@@ -17,15 +17,10 @@ export class Config {
     static isIos = Platform.OS === 'ios';
     static platformOS = Platform.OS;
 
-    static revenueCatPublicKey = 'wciuClkgweIivYNTlQfmRfvRRoptoHGZ';
-
     static version = '1.7.2';
     static appStoreListing = Config.isIos
         ? 'https://itunes.apple.com/app/id1505607801'
         : 'https://play.google.com/store/apps/details?id=com.gazzini.pooldash';
 
-    static preloadedFormulas = __DEV__ ? preloadedDev : preloadedProd;
-    // static preloadedFormulas = preloadedProd;
-    static poolDoctorFormulaKey = __DEV__ ? 'inconsequential_lawyer_485' : 'awful_picture_479';
-    // static poolDoctorFormulaKey = 'awful_picture_479';
+    static poolDoctorFormulaId: FormulaID = 'chlorine_cal_hypo';
 }

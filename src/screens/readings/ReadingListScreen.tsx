@@ -6,13 +6,12 @@ import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useLastLogEntryHook, useLoadRecipeHook } from '~/hooks/RealmPoolHook';
+import { useLastLogEntryHook, useLoadFormulaHook } from '~/hooks/RealmPoolHook';
 import { PDStackNavigationProps } from '~/navigator/shared';
 import { dispatch, useTypedSelector } from '~/redux/AppState';
 import { clearReadings, recordInput } from '~/redux/readingEntries/Actions';
 import { Config } from '~/services/Config/AppConfig';
 import { Haptic } from '~/services/HapticService';
-import { RecipeService } from '~/services/RecipeService';
 import { Util } from '~/services/Util';
 
 import { useNavigation } from '@react-navigation/native';
@@ -27,7 +26,7 @@ export const ReadingListScreen: React.FC = () => {
     const [isSliding, setIsSliding] = React.useState(false);
     const [readingStates, setReadingStates] = React.useState<ReadingState[]>([]);
     const pool = useTypedSelector(state => state.selectedPool);
-    const recipe = useLoadRecipeHook(pool?.recipeKey || RecipeService.defaultFormulaKey);
+    const recipe = useLoadFormulaHook(pool?.formulaId);
     const { setOptions, navigate } = useNavigation<PDStackNavigationProps>();
     const theme = useTheme();
     const lastLogEntry = useLastLogEntryHook(pool?.objectId ?? '');
@@ -67,7 +66,7 @@ export const ReadingListScreen: React.FC = () => {
             setReadingStates(initialReadingStates);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recipe?.id, recipe?.ts, pool]);
+    }, [recipe?.id, pool]);
 
     const handleCalculatePressed = (): void => {
         Haptic.medium();

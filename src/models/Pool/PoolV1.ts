@@ -1,4 +1,3 @@
-import { FormulaKey } from '../recipe/FormulaKey';
 import { WallTypeValue } from './WallType';
 import { WaterTypeValue } from './WaterType';
 
@@ -16,7 +15,7 @@ export class PoolV1 {
     objectId!: string;
 
     // The recipe id + the ts it was last updated
-    recipeKey?: FormulaKey;
+    recipeKey?: string;
 
     // The pool water type
     waterType!: WaterTypeValue;

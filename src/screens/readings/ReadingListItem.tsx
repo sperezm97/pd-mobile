@@ -13,7 +13,7 @@ import { PDTextInput } from '~/components/inputs/PDTextInput';
 import { PDText } from '~/components/PDText';
 import { useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { Reading } from '~/models/recipe/Reading';
+import { Reading } from '~/formulas/models/Reading';
 
 export interface ReadingState {
     reading: Reading;
@@ -52,7 +52,7 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
 
     // Keep the slider in range sliderMin <= x <= sliderMax
     let sliderValue = rs.value ? parseFloat(rs.value) : 0;
-    sliderValue = Math.max(Math.min(sliderValue, r.sliderMax), r.sliderMin);
+    sliderValue = Math.max(Math.min(sliderValue, r.sliderRange.max), r.sliderRange.min);
 
     let readingUnitsText = '';
     if (r.units) {
@@ -111,8 +111,8 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
                         </PDView>
                         <Slider
                             style={ styles.slider }
-                            minimumValue={ r.sliderMin }
-                            maximumValue={ r.sliderMax }
+                            minimumValue={ r.sliderRange.min }
+                            maximumValue={ r.sliderRange.max }
                             minimumTrackTintColor={ theme.colors.greyLight }
                             maximumTrackTintColor={ theme.colors.greyLight }
                             thumbImage={ theme.isDarkMode ? images.sliderThumbDark : images.sliderThumbLight }

@@ -3,7 +3,7 @@ import { PDColor } from '~/components/PDTheme';
 import { EntryPoolElements } from '../entryPoolValues/EntryPoolHelpers';
 
 
-export type CreatePoolField = EntryPoolElements | 'recipe' | 'customTargets';
+export type CreatePoolField = EntryPoolElements | 'formula' | 'customTargets';
 
 export interface CreatePoolListItem {
     id: CreatePoolField;

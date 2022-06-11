@@ -5,10 +5,9 @@ import { SVG } from '~/assets/images';
 import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useLoadRecipeHook, useRealmPoolHistoryHook } from '~/hooks/RealmPoolHook';
+import { useLoadFormulaHook, useRealmPoolHistoryHook } from '~/hooks/RealmPoolHook';
 import { PDNavParams } from '~/navigator/shared';
 import { useTypedSelector } from '~/redux/AppState';
-import { RecipeService } from '~/services/RecipeService';
 
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -25,7 +24,7 @@ const PoolServiceConfigSection = () => {
     const { navigate } = useNavigation<StackNavigationProp<PDNavParams>>();
     const theme = useTheme();
     const selectedPool = useTypedSelector((state) => state.selectedPool);
-    const recipe = useLoadRecipeHook(selectedPool?.recipeKey || RecipeService.defaultFormulaKey);
+    const recipe = useLoadFormulaHook(selectedPool?.formulaId);
     const history = useRealmPoolHistoryHook(selectedPool?.objectId ?? null);
     const deviceSettings = useTypedSelector((state) => state.deviceSettings);
 

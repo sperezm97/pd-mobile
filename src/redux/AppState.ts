@@ -10,7 +10,7 @@ import { pickerStateReducer } from './picker/Reducer';
 import { popoverReducer } from './popover/Reducer';
 import { readingEntriesReducer } from './readingEntries/Reducer';
 import { selectedPoolReducer } from './selectedPool/Reducer';
-import { selectedRecipeReducer } from './selectedRecipe/Reducer';
+import { selectedFormulaReducer } from './selectedFormula/Reducer';
 
 const reducer = combineReducers({
     readingEntries: readingEntriesReducer,
@@ -19,7 +19,7 @@ const reducer = combineReducers({
     hasValidSubscription: hasValidSubscriptionReducer,
     pickerState: pickerStateReducer,
     deviceSettings: deviceSettingsReducer,
-    selectedFormulaKey: selectedRecipeReducer,
+    selectedFormulaKey: selectedFormulaReducer,
     popover: popoverReducer,
 });
 

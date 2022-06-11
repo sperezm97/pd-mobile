@@ -1,13 +1,12 @@
-import { ApolloClient, useApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Realm from 'realm';
+import { Formula } from '~/formulas/models/Formula';
+import { FormulaID } from '~/formulas/models/FormulaID';
 import { LogEntry } from '~/models/logs/LogEntry';
 import { IPool, Pool } from '~/models/Pool';
 import { TargetRangeOverride } from '~/models/Pool/TargetRangeOverride';
-import { Recipe } from '~/models/recipe/Recipe';
-import { FormulaKey } from '~/models/recipe/FormulaKey';
 import { Database } from '~/repository/Database';
-import { RecipeService } from '~/services/RecipeService';
+import { FormulaService } from '~/services/FormulaService';
 import { Util } from '~/services/Util';
 
 import { RealmUtil } from '../services/RealmUtil';
@@ -71,25 +70,10 @@ export const useLastLogEntryHook = (poolId: string): LogEntry | null => {
     return data;
 };
 
-// WARNING: this is susceptible to race-conditions (if you request a remote recipe, and then a local one, the remote one might finish last & stomp the second call).
-export const useLoadRecipeHook = (formulaKey: FormulaKey): Recipe | null => {
-    const [recipe, setRecipe] = useState<Recipe | null>(null);
-    const client = useApolloClient() as ApolloClient<NormalizedCacheObject>; // TODO: type-casting? ugh.
-
-    useEffect(() => {
-        try {
-            const loadRecipe = async () => {
-                const recipeResult = await RecipeService.resolveRecipeWithKey(formulaKey, client);
-                // TODO: check async state here for subsequent requests
-                setRecipe(recipeResult);
-            };
-            loadRecipe();
-        } catch (e) {
-            console.error(e);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formulaKey]);
-    return recipe;
+// TODO: make this not a hook anymore.
+export const useLoadFormulaHook = (formulaID?: FormulaID): Formula => {
+    const id = formulaID ?? FormulaService.defaultFormulaId;
+    return useMemo(() => FormulaService.getFormulaById(id), [id]);
 };
 
 /// This pulls all target range overrides for a given pool

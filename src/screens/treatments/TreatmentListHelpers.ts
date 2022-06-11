@@ -1,5 +1,5 @@
-import { Recipe } from '~/models/recipe/Recipe';
-import { Treatment } from '~/models/recipe/Treatment';
+import { Formula } from '~/formulas/models/Formula';
+import { Treatment } from '~/formulas/models/Treatment';
 import { DeviceSettings } from '~/models/DeviceSettings';
 import { Util } from '~/services/Util';
 import { Units } from '~/models/TreatmentUnits';
@@ -16,9 +16,9 @@ export interface TreatmentState {
 }
 
 export class TreatmentListHelpers {
-    static getTreatmentFromRecipe = (treatmentVarName: string, recipe: Recipe): Treatment | null => {
-        for (let i = 0; i < recipe.treatments.length; i++) {
-            const t = recipe.treatments[i];
+    static getTreatmentFromFormula= (treatmentVarName: string, formula: Formula): Treatment | null => {
+        for (let i = 0; i < formula.treatments.length; i++) {
+            const t = formula.treatments[i];
             if (t.var === treatmentVarName) {
                 return t;
             }

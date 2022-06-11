@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { IPool } from '~/models/Pool';
 import { useTypedSelector } from '~/redux/AppState';
-import { RecipeService } from '~/services/RecipeService';
+import { FormulaService } from '~/services/FormulaService';
 import { Util } from '~/services/Util';
 
 export type PartialPoolWithId = Partial<IPool> & Pick<IPool, 'objectId'>;
@@ -16,7 +16,7 @@ const createPoolDefaults: Partial<IPool> = {
     name: 'House Pool',
     waterType: 'chlorine',
     email: undefined,
-    recipeKey: RecipeService.defaultFormulaKey,
+    formulaId: FormulaService.defaultFormulaId,
     wallType: 'plaster',
 };
 

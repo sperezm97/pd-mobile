@@ -1,0 +1,1 @@
+export type FormulaID = 'chlorine_cal_hypo' | 'salt_calc_hypo';

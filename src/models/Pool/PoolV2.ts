@@ -1,4 +1,4 @@
-import { FormulaKey } from '../recipe/FormulaKey';
+import { FormulaID } from '~/formulas/models/FormulaID';
 import { IPool } from './IPool';
 import { WallTypeValue } from './WallType';
 import { WaterTypeValue } from './WaterType';
@@ -17,7 +17,10 @@ export class PoolV2 implements IPool {
     objectId!: string;
 
     // The recipe id + the ts it was last updated
-    recipeKey?: FormulaKey;
+    recipeKey?: string;
+
+    // TODO: make a poolv3 with this:
+    formulaId?: FormulaID;
 
     // The pool water type
     waterType!: WaterTypeValue;

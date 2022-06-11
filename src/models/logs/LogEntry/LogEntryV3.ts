@@ -1,6 +1,5 @@
 import { ReadingEntry } from '../ReadingEntry';
 import { TreatmentEntry } from '../TreatmentEntry';
-import { FormulaKey } from '../../recipe/FormulaKey';
 
 /**
  * Represents readingEntries and treatmentEntries for a given pool
@@ -28,7 +27,7 @@ export class LogEntryV3 {
     treatmentEntries!: TreatmentEntry[];
 
     // The unique id of the recipe
-    recipeKey!: FormulaKey;
+    recipeKey!: string;
 
     // The human-friendly name of the formula
     formulaName?: string;
@@ -66,7 +65,7 @@ export class LogEntryV3 {
         serverTS: number | null,
         readingEntries: ReadingEntry[],
         treatmentEntries: TreatmentEntry[],
-        recipeKey: FormulaKey,
+        recipeKey: string,
         formulaName: string,
         notes: string | null,
         poolDoctorId: string | null,

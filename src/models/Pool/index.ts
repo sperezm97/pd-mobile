@@ -1,3 +1,3 @@
 /** Export current pool object here */
-export { PoolV2 as Pool } from './PoolV2';
+export { PoolV3 as Pool } from './PoolV3';
 export { IPool } from './IPool';

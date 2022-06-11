@@ -1,6 +1,5 @@
-import { Reading } from 'models/recipe/Reading';
-
 import { createAction } from '@reduxjs/toolkit';
+import { Reading } from '~/formulas/models/Reading';
 
 export const recordInput = createAction('readings/input', (reading: Reading, value: number) => ({
     payload: {

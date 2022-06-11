@@ -1,4 +1,4 @@
-import { Treatment, TreatmentType } from '../recipe/Treatment';
+import { Treatment, TreatmentType } from '~/formulas/models/Treatment';
 
 /**
  * Represents the amount or state of a treatment or task

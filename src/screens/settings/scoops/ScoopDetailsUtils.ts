@@ -1,5 +1,5 @@
 import { DeviceSettings } from '~/models/DeviceSettings';
-import { Treatment } from '~/models/recipe/Treatment';
+import { Treatment } from '~/formulas/models/Treatment';
 import { Scoop } from '~/models/Scoop';
 import { Util } from '~/services/Util';
 

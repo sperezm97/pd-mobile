@@ -1,4 +1,4 @@
-import { Reading } from '~/models/recipe/Reading';
+import { Reading } from '~/formulas/models/Reading';
 
 /**
  * Represents the value of a reading or observation
@@ -38,8 +38,8 @@ export class ReadingEntry {
         readingEntry.readingName = reading.name;
         readingEntry.value = value;
         readingEntry.units = reading.units || undefined;
-        readingEntry.idealMin = reading.idealMin || undefined;
-        readingEntry.idealMax = reading.idealMax || undefined;
+        readingEntry.idealMin = reading.targetRange?.min || undefined;
+        readingEntry.idealMax = reading.targetRange?.max || undefined;
         return readingEntry;
     }
 }

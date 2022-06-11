@@ -84,7 +84,7 @@ export class Database {
                     clientTS: entry.clientTS,
                     userTS: entry.userTS,
                     serverTS: entry.serverTS,
-                    recipeKey: entry.recipeKey,
+                    formulaId: entry.formulaId,
                     formulaName: entry.formulaName,
                     notes: entry.notes,
                     poolDoctorId: entry.poolDoctorId,
@@ -180,7 +180,7 @@ export class Database {
                 if (existingPool) {
                     existingPool.name = pool.name;
                     existingPool.gallons = pool.gallons;
-                    existingPool.recipeKey = pool.recipeKey;
+                    existingPool.formulaId = pool.formulaId;
                     existingPool.waterType = pool.waterType;
                     existingPool.wallType = pool.wallType;
                     existingPool.email = pool.email;

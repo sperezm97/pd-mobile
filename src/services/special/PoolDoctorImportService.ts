@@ -3,13 +3,13 @@ import { ReadingEntry } from '~/models/logs/ReadingEntry';
 import { TreatmentEntry } from '~/models/logs/TreatmentEntry';
 import { IPool } from '~/models/Pool';
 import { WaterTypeValue } from '~/models/Pool/WaterType';
-import { Reading } from '~/models/recipe/Reading';
-import { TreatmentType } from '~/models/recipe/Treatment';
 import { Database } from '~/repository/Database';
 import { Config } from '../Config/AppConfig';
 import { RealmUtil } from '../RealmUtil';
-import { RecipeService } from '../RecipeService';
+import { FormulaService } from '../FormulaService';
 import { Util } from '../Util';
+import { Reading } from '~/formulas/models/Reading';
+import { TreatmentType } from '~/formulas/models/Treatment';
 
 type PoolStatus = 'created' | 'skipped' | 'error';
 interface PoolDoctorImportStats {
@@ -81,7 +81,7 @@ export namespace PoolDoctorImportService {
             gallons,
             wallType: 'plaster',
             waterType,
-            recipeKey: RecipeService.getFormulaKeyForWaterType(waterType),
+            formulaId: FormulaService.getFormulaIdForWaterType(waterType),
             poolDoctorId: doctorPool.modified_at,       // We actually didn't use an id at all, I'm thankful this is here.
         };
     };
@@ -98,7 +98,7 @@ export namespace PoolDoctorImportService {
             log.readings.map(mapPoolDoctorReadingEntryToPoolDashReadingEntry),
             // Exclude treatments with units that have a value of 0 or less.
             log.treatments.map(mapPoolDoctorTreatmentEntryToPoolDashTreatmentEntry).filter(te => !(!!te.displayUnits && te.ounces <= 0)),
-            Config.poolDoctorFormulaKey,
+            Config.poolDoctorFormulaId,
             'Pool Doctor (old)',
             log.notes,
             log.created_at
@@ -126,12 +126,16 @@ export namespace PoolDoctorImportService {
             type: 'number',
             units: old.units ?? null,
             defaultValue: 0,
-            sliderMax: 0,
-            sliderMin: 0,
+            sliderRange: {
+                min: 0,
+                max: 0,
+            },
+            targetRange: {
+                min: 0,
+                max: 0,
+            },
             decimalPlaces: 1,
             isDefaultOn: true,
-            idealMax: null,
-            idealMin: null,
             offsetReadingVar: null,
         };
 
@@ -164,7 +168,7 @@ export namespace PoolDoctorImportService {
         const fakeTreatmentForSaving = {
             name: stripConcentrationFromTreatmentName(old.name),
             var: getVarNameFromTreatmentName(old.name),
-            function: '',    // doesn't matter
+            function: () => 0,    // doesn't matter
             concentration: getConcentrationFromTreatmentName(old.name),
             type,
         };

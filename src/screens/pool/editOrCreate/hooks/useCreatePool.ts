@@ -1,10 +1,9 @@
-import { useLoadRecipeHook } from '~/hooks/RealmPoolHook';
+import { useLoadFormulaHook } from '~/hooks/RealmPoolHook';
 import { DeviceSettings } from '~/models/DeviceSettings';
 import { getDisplayForWallType } from '~/models/Pool/WallType';
 import { getDisplayForWaterType } from '~/models/Pool/WaterType';
 import { PDStackNavigationProps } from '~/navigator/shared';
 import { CreatePoolField, CreatePoolListSection } from '~/screens/pool/editOrCreate/create/CreatePoolHelpers';
-import { RecipeService } from '~/services/RecipeService';
 import { VolumeUnitsUtil } from '~/services/VolumeUnitsUtil';
 
 import { useNavigation } from '@react-navigation/native';
@@ -18,10 +17,10 @@ export const useCreatePool = (deviceSettings: DeviceSettings): CreatePoolListSec
     const { pool } = useEntryPool();
     const { estimation } = useVolumeEstimator();
     const { navigate } = useNavigation<PDStackNavigationProps>();
-    const recipe = useLoadRecipeHook(pool.recipeKey ?? RecipeService.defaultFormulaKey);
+    const formula = useLoadFormulaHook(pool.formulaId);
 
-    const numberOfTargetLevels = recipe?.custom?.length ?? 0;
-
+    // TODO: load correct target ranges.
+    const numberOfTargetLevels = formula?.targets?.length ?? 0;
 
     const handleNavigateToPopover = (id: CreatePoolField) => {
         const headerInfo = EntryPoolHelpers.entryHeaderInfo[id];
@@ -91,9 +90,9 @@ export const useCreatePool = (deviceSettings: DeviceSettings): CreatePoolListSec
             {
                 label: 'Formula: ',
                 image: 'IconPoolFormula',
-                valueColor: recipe?.name ? 'orange' : 'grey',
-                id: 'recipe',
-                value: recipe?.name ? recipe?.name : ' Default',
+                valueColor: formula?.name ? 'orange' : 'grey',
+                id: 'formula',
+                value: formula?.name ? formula?.name : ' Default',
                 onPress: handleNavigateToFormulaListScreen,
                 animationIndex: 4,
             },

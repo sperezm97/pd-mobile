@@ -1,4 +1,4 @@
-import { useLoadRecipeHook } from '~/hooks/RealmPoolHook';
+import { useLoadFormulaHook } from '~/hooks/RealmPoolHook';
 import { Pool } from '~/models/Pool';
 import { getDisplayForWallType } from '~/models/Pool/WallType';
 import { getDisplayForWaterType } from '~/models/Pool/WaterType';
@@ -6,7 +6,6 @@ import { PDStackNavigationProps } from '~/navigator/shared';
 import { useTypedSelector } from '~/redux/AppState';
 import { EditPoolField, EditPoolListSection } from '~/screens/pool/editOrCreate/edit/EditPoolHelpers';
 import { ExportService } from '~/services/ExportService';
-import { RecipeService } from '~/services/RecipeService';
 import { VolumeUnitsUtil } from '~/services/VolumeUnitsUtil';
 
 import { useNavigation } from '@react-navigation/native';
@@ -26,10 +25,11 @@ export type MenuItemId =
 
 export const useEditPool = (pool: Partial<Pool>, toggleVisible: () => void): EditPoolListSection[] => {
     const deviceSettings = useTypedSelector((state) => state.deviceSettings);
-    const recipe = useLoadRecipeHook(pool?.recipeKey ?? RecipeService.defaultFormulaKey);
+    const formula = useLoadFormulaHook(pool?.formulaId);
     const navigation = useNavigation<PDStackNavigationProps>();
 
-    const numberOfTargetLevels = recipe?.custom.length ?? 0;
+    // TODO: load target levels correctly.
+    const numberOfTargetLevels = formula?.targets.length ?? 0;
 
     const handleNavigateToPopover = (id: EditPoolField) => {
         const headerInfo = EntryPoolHelpers.entryHeaderInfo[id];
@@ -104,10 +104,10 @@ export const useEditPool = (pool: Partial<Pool>, toggleVisible: () => void): Edi
             title: 'advanced',
             data: [
                 {
-                    id: 'recipe',
+                    id: 'formula',
                     label: 'Formula: ',
                     image: 'IconPoolFormula',
-                    value: recipe?.name,
+                    value: formula?.name,
                     valueColor: 'orange',
                     onPress: handleNavigateToFormulaListScreen,
                     animationIndex: 4,

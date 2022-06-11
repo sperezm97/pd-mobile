@@ -5,9 +5,10 @@ import BorderInputWithLabel from '~/components/inputs/BorderInputWithLabel';
 import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useRealmPoolTargetRange } from '~/hooks/RealmPoolHook';
+import { TargetRange } from '~/formulas/models/TargetRange';
+import { useLoadFormulaHook, useRealmPoolTargetRange } from '~/hooks/RealmPoolHook';
 import { TargetRangeOverride } from '~/models/Pool/TargetRangeOverride';
-import { TargetRange } from '~/models/recipe/TargetRange';
+
 import { Database } from '~/repository/Database';
 import { Util } from '~/services/Util';
 import { PartialPoolWithId } from '../pool/editOrCreate/hooks/useEntryPool';
@@ -30,10 +31,11 @@ interface TargetFormFields {
 const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
     const locallySavedOverride = useRealmPoolTargetRange(tr.var, pool?.objectId); // ?? ({} as TargetRangeOverride);
     const theme = useTheme();
+    const formula = useLoadFormulaHook(pool.formulaId);
 
     // The min & max will sometimes be equal to the defaults, but we need to determine both for the sake of comparison
-    const recipeDefaults = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', null);
-    const { min, max } = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', locallySavedOverride);
+    const recipeDefaults = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', null, formula);
+    const { min, max } = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', locallySavedOverride, formula);
 
     // We use empty-strings for defaults (to show the placeholder)
     const [formValues, setFormValues] = React.useState<TargetFormFields>({
