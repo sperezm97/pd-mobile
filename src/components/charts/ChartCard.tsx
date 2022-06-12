@@ -51,8 +51,6 @@ export const ChartCard: React.FC<ChartCardProps> = (props) => {
                 theme: { backgroundColor: theme.colors.white },
             };
             const graphString = JSON.stringify(graphData);
-            console.log('Graphing:');
-            console.log(graphString);
             webView.current?.injectJavaScript(`setTimeout(() => {
                 window.graphData(${graphString});
             }, 100);`);
@@ -63,7 +61,6 @@ export const ChartCard: React.FC<ChartCardProps> = (props) => {
         }
     };
 
-    console.log('Rendering charts again!!!!!!!!!!!');
     const chartPath =
         Platform.OS === 'android' ? 'file:///android_asset/charts/Charts.html' : './web.bundle/Charts.html';
 
