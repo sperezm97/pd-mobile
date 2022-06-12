@@ -10,19 +10,57 @@ export interface MinMax {
 }
 
 export namespace TargetsHelper {
+
+    export const listTargetsForFormula = (
+        formula: Formula
+    ): TargetRange[] => {
+        const readingTargets: TargetRange[] = formula.readings.map(r => ({
+            var: r.var,
+            defaults: [{
+                range: r.targetRange,
+                wallType: null,
+            }],
+            description: null,
+            name: r.name,
+        }));
+
+        formula.targets.forEach(ft => {
+            const existingIndex = readingTargets.findIndex(rt => rt.var === ft.var);
+            if (existingIndex >= 0) {
+                readingTargets[existingIndex] = ft;
+            } else {
+                readingTargets.unshift(ft);
+            }
+        });
+
+        return readingTargets;
+    };
+
     export const resolveRangesForPool = (
         formula: Formula,
         poolWallType: WallTypeValue,
         localOverridesForPool: TargetRangeOverride[],
     ): EffectiveTargetRange[] => {
 
-        // TODO: merge more effeciently.
-        const readingTargets: EffectiveTargetRange[] = formula.readings.map(r => ({
+        // Get targets from readings:
+        const targets: TargetRange[] = formula.readings.map(r => ({
             var: r.var,
-            range: r.targetRange,
+            defaults: [{
+                range: r.targetRange,
+                wallType: null,
+            }],
+            name: r.name,
+            description: null,
         }));
 
-        const formulaTargets = formula.targets.map((tr) => {
+
+        formula.targets.forEach(ft => {
+            if (targets.findIndex(t => t.var === ft.var) < 0) {
+                targets.push(ft);
+            }
+        });
+
+        return targets.map((tr) => {
             const localOverride = Util.firstOrNull(
                 localOverridesForPool.filter((local) => local.var === tr.var)
             );
@@ -31,18 +69,6 @@ export namespace TargetsHelper {
                 var: tr.var,
             };
         });
-
-        const result: EffectiveTargetRange[] = Util.deepCopy(readingTargets);
-        formulaTargets.forEach(ft => {
-            const existingIndex = result.findIndex(rtr => rtr.var === ft.var);
-            if (existingIndex >= 0) {
-                result[existingIndex] = ft;
-            } else {
-                result.push(ft);
-            }
-        });
-
-        return result;
     };
 
     // TODO: clean up params.
