@@ -6,7 +6,7 @@ import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
 import { TargetRange } from '~/formulas/models/TargetRange';
-import { useLoadFormulaHook, useRealmPoolTargetRange } from '~/hooks/RealmPoolHook';
+import { useRealmPoolTargetRange } from '~/hooks/RealmPoolHook';
 import { TargetRangeOverride } from '~/models/Pool/TargetRangeOverride';
 
 import { Database } from '~/repository/Database';
@@ -31,16 +31,15 @@ interface TargetFormFields {
 const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
     const locallySavedOverride = useRealmPoolTargetRange(tr.var, pool?.objectId); // ?? ({} as TargetRangeOverride);
     const theme = useTheme();
-    const formula = useLoadFormulaHook(pool.formulaId);
 
     // The min & max will sometimes be equal to the defaults, but we need to determine both for the sake of comparison
-    const recipeDefaults = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', null, formula);
-    const { min, max } = TargetsHelper.resolveMinMax(tr, pool?.wallType ?? 'plaster', locallySavedOverride, formula);
+    const formulaDefaults = TargetsHelper.resolveMinMax(tr, null);
+    const { min, max } = TargetsHelper.resolveMinMax(tr, locallySavedOverride);
 
     // We use empty-strings for defaults (to show the placeholder)
     const [formValues, setFormValues] = React.useState<TargetFormFields>({
-        min: min === recipeDefaults.min ? '' : `${min}`,
-        max: max === recipeDefaults.max ? '' : `${max}`,
+        min: min === formulaDefaults.min ? '' : `${min}`,
+        max: max === formulaDefaults.max ? '' : `${max}`,
     });
 
     const handleTextChange = useCallback(
@@ -55,15 +54,15 @@ const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
     if (!pool) { return <></>; }
 
     // Check for errors:
-    const effectiveMinValue = formValues.min.length ? +formValues.min : recipeDefaults.min;
-    const effectiveMaxValue = formValues.max.length ? +formValues.max : recipeDefaults.max;
+    const effectiveMinValue = formValues.min.length ? +formValues.min : formulaDefaults.min;
+    const effectiveMaxValue = formValues.max.length ? +formValues.max : formulaDefaults.max;
     const isValid = effectiveMaxValue >= effectiveMinValue;
 
     const isDefault = (field: 'min' | 'max'): Boolean => {
         if (field === 'min') {
-            return recipeDefaults.min === min;
+            return formulaDefaults.min === min;
         }
-        return recipeDefaults.max === max;
+        return formulaDefaults.max === max;
     };
 
     const reset = () => {
@@ -75,15 +74,15 @@ const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
 
     const save = async () => {
         // If these are the default values, just delete them:
-        if (recipeDefaults.max === +formValues.max && recipeDefaults.min === +formValues.min) {
+        if (formulaDefaults.max === +formValues.max && formulaDefaults.min === +formValues.min) {
             reset();
             return;
         }
 
         const newLocalOverride = {
             objectId: locallySavedOverride?.objectId ?? null, /// If this is null, the DB should create a new object
-            min: formValues.min.length ? +formValues.min : recipeDefaults.min,
-            max: formValues.max.length ? +formValues.max : recipeDefaults.max,
+            min: formValues.min.length ? +formValues.min : formulaDefaults.min,
+            max: formValues.max.length ? +formValues.max : formulaDefaults.max,
             poolId: pool.objectId,
             var: tr.var,
         };
@@ -119,7 +118,7 @@ const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
                 <PDView style={ styles.inputRow }>
                     <BorderInputWithLabel
                         label="min"
-                        placeholder={ `${recipeDefaults.min}` }
+                        placeholder={ `${formulaDefaults.min}` }
                         placeholderTextColor={ theme.colors.grey }
                         onChangeText={ (text) => handleTextChange('min', text) }
                         value={ formValues.min }
@@ -129,7 +128,7 @@ const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
                     />
                     <BorderInputWithLabel
                         label="max"
-                        placeholder={ `${recipeDefaults.max}` }
+                        placeholder={ `${formulaDefaults.max}` }
                         placeholderTextColor={ theme.colors.grey }
                         onChangeText={ (text) => handleTextChange('max', text) }
                         value={ formValues.max }

@@ -12,7 +12,8 @@ import { PDView } from '~/components/PDView';
 export const SubscriptionScreen: React.FC = () => {
     const theme = useTheme();
 
-    const handlePatreonPressed = async () => {
+    const handleTwitchPressed = async () => {
+        Linking.openURL('https://patreon.com/gazzini');
         Linking.openURL('https://patreon.com/gazzini');
     };
 
@@ -36,14 +37,14 @@ export const SubscriptionScreen: React.FC = () => {
                 </PDView>
                 <HR />
                 <PDText type="subHeading">
-                    Join Me
+                    Build With Me
                 </PDText>
                 <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
-                    The world needs great free software:
+                    Watch me code on Twitch!
                 </PDText>
                 <PDView style={ styles.buttonContainer }>
-                    <PDButton onPress={ handlePatreonPressed } bgColor="blue">
-                        Open Patreon
+                    <PDButton onPress={ handleTwitchPressed } bgColor="blue">
+                        Open Twitch
                     </PDButton>
                 </PDView>
                 <HR/>

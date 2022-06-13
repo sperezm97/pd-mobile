@@ -25,6 +25,5 @@ export interface Formula {
     treatments: Treatment[];
 
     // Any overrides to the default target ranges. These can still be overridden again by the end-user.
-    // TODO: remove these, rethink the overrides to be more general & elegant, maybe remove the wall-type complexity.
     targets: TargetRange[];
 }

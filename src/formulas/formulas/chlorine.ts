@@ -34,7 +34,15 @@ export const chlorineFormula: Formula = {
         temp_c,
         tds
     ],
-    targets: [],
+    targets: [{
+        var: 'fc',
+        range: {
+            min: 2,
+            max: 3,
+        },
+        name: 'Free Chlorine',
+        description: null,
+    }],
     treatments: [
         calc_hypo,
         soda_ash,

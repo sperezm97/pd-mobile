@@ -176,7 +176,7 @@ export const TreatmentListScreen: React.FC = () => {
             setHaveCalculationsProcessed(true);
         };
 
-        const targets = TargetsHelper.resolveRangesForPool(formula, pool.wallType, targetRangeOverridesForPool);
+        const targets = TargetsHelper.resolveRangesForPool(formula, targetRangeOverridesForPool);
         const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readings, targets);
         const formulaResults = CalculationService.run(formulaRunRequest);
         handleCalculatorResults(formulaResults);
