@@ -1,9 +1,9 @@
 import { calculate, FormulaRunRequest } from '~/formulas/calculator';
 import { Formula } from '~/formulas/models/Formula';
+import { ReadingValues } from '~/formulas/models/misc/Values';
 import { EffectiveTargetRange } from '~/formulas/models/TargetRange';
 import { Treatment } from '~/formulas/models/Treatment';
 import { TreatmentEntry } from '~/models/logs/TreatmentEntry';
-import { ReadingValue } from '~/models/ReadingValue';
 
 import { TreatmentState } from '~/screens/treatments/TreatmentListHelpers';
 
@@ -25,7 +25,7 @@ export class CalculationService {
     static getFormulaRunRequest = (
         formula: Formula,
         pool: Pool,
-        inputs: ReadingValue[],
+        inputs: ReadingValues,
         targets: EffectiveTargetRange[],
     ): FormulaRunRequest => {
         return {

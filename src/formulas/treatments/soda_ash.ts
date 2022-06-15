@@ -5,10 +5,8 @@ export const soda_ash: Treatment = {
     var: 'soda_ash',
     type: 'dryChemical',
     concentration: 100,
-    function: (p, r, t, c, s) => {
-        if (s.ph) {
-            return 0;
-        }
+    function: (p, r, t, c) => {
+        if (r.ph === undefined) { return 0; }
         
         // If the ph is already high enough, we don't need any soda ash.
         if (r.ph >= c.ph.min) {

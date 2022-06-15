@@ -5,11 +5,9 @@ export const cal_chlor: Treatment = {
     var: 'cal_chlor',
     type: 'dryChemical',
     concentration: 100,
-    function: (p, r, t, c, s) => {
+    function: (p, r, t, c) => {
         // If the user didn't take a CH reading, don't try to balance this chem:
-        if (s.ch) {
-            return 0;
-        }
+        if (r.ch === undefined) { return 0; }
 
         // If the calcium hardness is above 200, we don't need to add any calcium chloride.
         if (r.ch >= c.ch.min) {

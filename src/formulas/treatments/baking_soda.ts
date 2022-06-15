@@ -5,10 +5,8 @@ export const baking_soda: Treatment = {
     var: 'baking_soda',
     type: 'dryChemical',
     concentration: 100,
-    function: (p, r, t, c, s) => {
-        if (s.ta) {
-            return 0;
-        }
+    function: (p, r, t, c) => {
+        if (r.ta === undefined) { return 0; }
         
         // If the TA is already in good range, don't add any baking soda
         if (r.ta >= c.ta.min) {

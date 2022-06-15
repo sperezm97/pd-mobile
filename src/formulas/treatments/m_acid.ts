@@ -5,10 +5,8 @@ export const m_acid: Treatment = {
     var: 'm_acid',
     type: 'liquidChemical',
     concentration: 31,
-    function: (p, r, t, c, s) => {
-        if (s.ph) {
-            return 0;
-        }
+    function: (p, r, t, c) => {
+        if (r.ph === undefined) { return 0; }
         // Muriatic Acid helps to lower the pH. I personally don't like
         // how the acid makes the water slimy & unswimmable for a few hours...
         // but meh.

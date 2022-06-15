@@ -4,14 +4,19 @@ export const lsi: Treatment = {
     name: 'LSI',
     var: 'lsi',
     type: 'calculation',
-    function: (p, r, t, c, s) => {
+    function: (p, r, t, c) => {
         // We need these 4 readings + temperature to calculate this:
-        if (s.ch || s.ph || s.tds || s.ta || (s.temp_f && s.temp_c)) {
+        if ((r.ch === undefined)
+        || (r.ph === undefined)
+        || (r.tds === undefined)
+        || (r.ta === undefined)
+        || ((r.temp_f === undefined) && (r.temp_c === undefined))
+        ) {
             return null;
         }
 
-        // Prefer the temp_f reading (if the user took both for some reason). But, either works:
-        const degrees_c = (s.temp_f) ? r.temp_c : ((r.temp_f - 32) / 1.8);
+        // Get the degrees in C, no matter which reading the user actually took.
+        const degrees_c = r.temp_c || (r.temp_f - 32) / 1.8;
 
         const aa = (Math.log10(r.tds) - 1) / 10.0;
         const bb = (-13.12 * Math.log10(degrees_c + 273)) + 34.55;

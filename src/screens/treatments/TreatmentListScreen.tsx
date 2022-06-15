@@ -177,7 +177,11 @@ export const TreatmentListScreen: React.FC = () => {
         };
 
         const targets = TargetsHelper.resolveRangesForPool(formula, targetRangeOverridesForPool);
-        const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readings, targets);
+        const readingValues = readings.reduce((prev, current) => {
+            prev[current.var] = current.value;
+            return prev;
+        }, {});
+        const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readingValues, targets);
         const formulaResults = CalculationService.run(formulaRunRequest);
         handleCalculatorResults(formulaResults);
     }, [allScoops, ds, formula, pool, readings, targetRangeOverridesForPool]);

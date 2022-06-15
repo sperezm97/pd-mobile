@@ -4,8 +4,9 @@ export const swg_up: Treatment = {
     name: 'Increase Salt Generator',
     var: 'swg_up',
     type: 'task',
-    function: (p, r, t, c, s) => {
-        if (s.NaCl) { return 0; }
+    function: (p, r, t, c) => {
+        if (r.NaCl === undefined) { return 0; }
+
         if ( r.NaCl < c.NaCl.min) {
             return 1;
         }

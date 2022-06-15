@@ -9,7 +9,7 @@ export interface ReadingValue {
 }
 
 export interface ReadingValues {
-    [varName:string]: number;       // TODO: change to `number | null` and remove the skipped business
+    [varName:string]: number;
 }
 
 // These are identical to the shape of the reading types.
