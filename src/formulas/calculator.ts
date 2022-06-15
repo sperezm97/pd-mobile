@@ -13,11 +13,6 @@ export interface FormulaRunRequest {
     pool: Pool;
 }
 
-interface CalculationResult {
-    value: number | null;
-    var: string;
-}
-
 const getTargets = (formula: Formula, customTargets: EffectiveTargetRange[]): EffectiveTargetRanges => {
     const targets = formula.readings.map(r => ({
         var: r.var,
@@ -48,7 +43,7 @@ const getTargets = (formula: Formula, customTargets: EffectiveTargetRange[]): Ef
     }, {});
 };
 
-export const calculate = (req: FormulaRunRequest): CalculationResult[] => {
+export const calculate = (req: FormulaRunRequest): TreatmentValues => {
 
     const { formula, readings } = req;
     const effectiveTargetRanges = getTargets(formula, req.targetLevels);
@@ -61,10 +56,10 @@ export const calculate = (req: FormulaRunRequest): CalculationResult[] => {
             outputs,
             effectiveTargetRanges,
         );
-        outputs[ t.var ] = result ?? 0;     // TODO: better nullability
+        if (result !== null) {
+            outputs[ t.var ] = result;
+        }
     });
     
-    return Object.keys(outputs).map(k => ({
-        var: k, value: outputs[k]
-    }));
+    return outputs;
 };

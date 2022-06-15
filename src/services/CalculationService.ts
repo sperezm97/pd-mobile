@@ -19,7 +19,11 @@ export interface CalculationResult {
 export class CalculationService {
 
     static run = (req: FormulaRunRequest): CalculationResult[] => {
-        return calculate(req);
+        const res = calculate(req);
+        return Object.keys(res).map(k => ({
+            var: k,
+            value: res[k],
+        }));
     }
 
     static getFormulaRunRequest = (
