@@ -6,9 +6,9 @@ export const phosphate_rem: Treatment = {
     type: 'dryChemical',
     concentration: 100,
     function: (p, r, t, c) => {
-        if (r.phosp === undefined) { return 0; }
+        if (r.phosp === undefined) { return null; }
         if (r.phosp < c.phosp.max) {
-            return 0;
+            return null;
         }
 
         // TODO: verify this

@@ -5,11 +5,11 @@ export const swg_up: Treatment = {
     var: 'swg_up',
     type: 'task',
     function: (p, r, t, c) => {
-        if (r.NaCl === undefined) { return 0; }
+        if (r.NaCl === undefined) { return null; }
 
         if ( r.NaCl < c.NaCl.min) {
             return 1;
         }
-        return 0;
+        return null;
     }
 };

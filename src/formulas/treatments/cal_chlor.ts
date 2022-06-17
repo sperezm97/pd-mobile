@@ -7,11 +7,11 @@ export const cal_chlor: Treatment = {
     concentration: 100,
     function: (p, r, t, c) => {
         // If the user didn't take a CH reading, don't try to balance this chem:
-        if (r.ch === undefined) { return 0; }
+        if (r.ch === undefined) { return null; }
 
         // If the calcium hardness is above 200, we don't need to add any calcium chloride.
         if (r.ch >= c.ch.min) {
-            return 0;
+            return null;
         }
 
         const target = (c.ch.min + c.ch.max) / 2.0;
