@@ -6,7 +6,7 @@
         "android": "npx react-native run-android",
         "ios": "npx react-native run-ios --scheme sandbox",
         "start": "npx react-native start",
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "lint": "eslint . --ext .ts,.tsx",
         "generate": "npx apollo codegen:generate --endpoint https://dev-api.pooldash.com/graphql --target typescript --tagName=gql --outputFlat src/services/gql/generated --globalTypesFile /_garbage.txt",
         "debug": "open \"rndebugger://set-debugger-loc?host=localhost&port=8081\"",
