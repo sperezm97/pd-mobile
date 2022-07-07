@@ -1,5 +1,3 @@
-import base64 from 'react-native-base64';
-
 export class Util {
     static deepCopy = <T>(target: T): T => {
         if (target === null) {
@@ -17,6 +15,7 @@ export class Util {
             });
             return cp.map((n: any) => Util.deepCopy<any>(n)) as any;
         }
+
 
         if (typeof target === 'object' && target !== {}) {
             const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
@@ -57,17 +56,6 @@ export class Util {
         } else {
             return t.name;
         }
-    };
-
-    static stringToBase64 = (input: string) => {
-        const utf8 = unescape(encodeURIComponent(input));
-        return base64.encode(utf8);
-    };
-
-    /// NOTE: this function is untested, be careful!
-    static stringFromBase64UntestedArgh = (input: string) => {
-        const unicode = base64.decode(input);
-        return decodeURIComponent(escape(unicode));
     };
 
     static generateUUID = () => {

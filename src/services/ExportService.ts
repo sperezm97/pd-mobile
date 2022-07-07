@@ -2,10 +2,15 @@ import Share from 'react-native-share';
 import { ShareOptions } from 'react-native-share';
 import { Pool } from '~/models/Pool';
 import { TempCsvRepo } from '~/repository/TempCsvRepo';
+import base64 from 'react-native-base64';
 
 import { Config } from './Config/AppConfig';
 import { DataService } from './DataService';
-import { Util } from './Util';
+
+const stringToBase64 = (input: string) => {
+    const utf8 = unescape(encodeURIComponent(input));
+    return base64.encode(utf8);
+};
 
 export namespace ExportService {
     /// If a pool is provided, the csv is just for that pool.
@@ -64,7 +69,7 @@ export namespace ExportService {
     /// I assume that this won't scale, and I'll have to figure out the proper mixture of
     /// project permissions & folder names eventually.
     const shareCSVAndroid = async (stringData: string): Promise<void> => {
-        const fileData = Util.stringToBase64(stringData);
+        const fileData = stringToBase64(stringData);
         const sharableURL = `data:text/comma-separated-values;base64,${fileData}`;
         const fileName = `pd-${new Date().toISOString()}`;
 
