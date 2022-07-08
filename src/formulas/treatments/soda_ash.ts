@@ -2,24 +2,18 @@ import { Treatment } from '~/formulas/models/Treatment';
 
 export const soda_ash: Treatment = {
     name: 'Sodium Carbonate',
-    var: 'soda_ash',
+    id: 'soda_ash',
     type: 'dryChemical',
     concentration: 100,
-    function: (p, r, t, c) => {
-        if (r.ph === undefined) { return null; }
-
-        // If the ph is already high enough, we don't need any soda ash.
-        if (r.ph >= c.ph.min) {
+    function: ({ pool, deltas, extra }) => {
+        if (deltas.ph === undefined || deltas.ph <= 0) {
             return null;
         }
-
-        // The target is the average of the min & max (which can be configured by users)
-        const target = (c.ph.min + c.ph.max) / 2.0;
-        const pHDelta = target - r.ph;
+        const r = extra.readings;
 
         // This is lazy & unscientific... we just set a cap,
         // because we don't want to use too much of this stuff.
-        const maxAmount = p.gallons * 0.0048;
+        const maxAmount = pool.gallons * .0048;
 
         // This is interesting -- the effect of adding a chemical to increase
         // the pH isn't "linear", but instead the measure will asymptotically approach
@@ -29,14 +23,26 @@ export const soda_ash: Treatment = {
         // This is just a rough approximation grabbed out of thin air -- if anyone
         // wants to "remix" this recipe with a better one, please do! We can use
         // sophisticated operators like Math.log(), I just don't do it yet...
-        const sodaAshMultiplier = Math.max(
+        const sodaAshMultiplierPH = Math.max(
             0.000805,
             0.00035 * (r.ph + 1)
         );
+        const sodaAshMultiplierForTA = .00014;      // TODO: verify this guess
 
-        const calculatedAmount = p.gallons * pHDelta * sodaAshMultiplier;
+        const calculatedAmount = pool.gallons * deltas.ph * sodaAshMultiplierPH;
 
         // Return the lower of the 2 numbers:
-        return Math.min(calculatedAmount, maxAmount);
-    },
+        const amount = Math.min(calculatedAmount, maxAmount);
+
+        const pHEffect = amount / (pool.gallons * sodaAshMultiplierPH);
+        const taEffect = amount / (pool.gallons * sodaAshMultiplierForTA);
+
+        return {
+            amount,
+            effects: {
+                ph: pHEffect,
+                ta: taEffect,
+            }
+        };
+    }
 };

@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const ta: Reading = {
     name: 'Total Alkalinity',
-    var: 'ta',
+    id: 'ta',
     defaultValue: 100,
     targetRange: {
         min: 80,
@@ -13,7 +13,7 @@ export const ta: Reading = {
         min: 50,
         max: 150,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: true,

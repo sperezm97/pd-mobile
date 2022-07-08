@@ -57,14 +57,14 @@ export namespace DataService {
         logEntry.readingEntries.forEach((re) => {
             result += `\nreading,\
                 ${re.readingName},\
-                ${re.var},\
+                ${re.id},\
                 ${re.value},\
                 ${re.units ?? ''}`;
         });
         logEntry.treatmentEntries.forEach((te) => {
             result += `\ntreatment,\
                 ${Util.getDisplayNameForTreatment({ name: te.treatmentName, concentration: te.concentration })},\
-                ${te.var},\
+                ${te.id},\
                 ${te.displayAmount},\
                 ${te.displayUnits ?? ''},\
                 ${te.ounces},\

@@ -1,13 +1,11 @@
-import { Reading } from '~/formulas/models/Reading';
-
 /**
  * Represents the value of a reading or observation
  */
-export class ReadingEntry {
+export class ReadingEntryV1 {
     // The value of the input
     value!: number;
 
-    // Variable name (defined by the recipe)
+    // Variable name (defined by the formula)
     var!: string;
 
     // human-friendly name of the reading
@@ -31,15 +29,4 @@ export class ReadingEntry {
             idealMax: 'double?',
         },
     };
-
-    static make(reading: Reading, value: number): ReadingEntry {
-        let readingEntry = new ReadingEntry();
-        readingEntry.var = reading.var;
-        readingEntry.readingName = reading.name;
-        readingEntry.value = value;
-        readingEntry.units = reading.units || undefined;
-        readingEntry.idealMin = reading.targetRange?.min || undefined;
-        readingEntry.idealMax = reading.targetRange?.max || undefined;
-        return readingEntry;
-    }
 }

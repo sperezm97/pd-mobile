@@ -66,22 +66,22 @@ export const TreatmentListItem: React.FunctionComponent<TreatmentListItemProps> 
     const onTextEndEditing = (event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
         setTextIsEditing(false);
         const finalText = event.nativeEvent.text;
-        props.onTextboxFinished(t.var, finalText);
+        props.onTextboxFinished(t.id, finalText);
     };
 
     const onPressedUnitsButton = () => {
-        props.handleUnitsButtonPressed(t.var);
+        props.handleUnitsButtonPressed(t.id);
     };
 
     const onPressedTreatmentNameButton = () => {
-        props.handleTreatmentNameButtonPressed(t.var);
+        props.handleTreatmentNameButtonPressed(t.id);
     };
 
     return (
         <AV y={ a.containerY } opacity={ a.opacity }>
             <PDView style={ styles.container }>
                 <TouchableScale
-                    onPress={ () => props.handleIconPressed(t.var) }
+                    onPress={ () => props.handleIconPressed(t.id) }
                     activeScale={ 0.98 }
                     disabled={ t.type === 'calculation' }>
                     <PDView style={ styles.content } borderColor="border" bgColor="white">

@@ -3,7 +3,7 @@ import { Reading } from '~/formulas/models/Reading';
 /// I *almost* called this 'nacl', but 'salt' is just so easy.
 export const salt: Reading = {
     name: 'Salt Level',
-    var: 'salt',
+    id: 'salt',
     defaultValue: 3200,
     targetRange: {
         min: 3200,
@@ -14,7 +14,7 @@ export const salt: Reading = {
         min: 0,
         max: 5000,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: false,

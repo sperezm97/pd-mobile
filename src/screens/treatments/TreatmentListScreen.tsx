@@ -78,7 +78,7 @@ export const TreatmentListScreen: React.FC = () => {
             const treatmentModification = (ts: TreatmentState) => {
                 const newOunces = (ts.ounces * ts.concentration) / newConcentration;
                 let newValue = newOunces;
-                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.var, allScoops);
+                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
                 if (ts.treatment.type === 'dryChemical') {
                     newValue = Converter.dryOunces(newOunces, ts.units as DryChemicalUnits, scoop);
                 } else if (ts.treatment.type === 'liquidChemical') {
@@ -121,7 +121,7 @@ export const TreatmentListScreen: React.FC = () => {
             const lastUnits = ds.treatments.units;
             const tss: TreatmentState[] = tes
                 .map((te) => {
-                    const t = TreatmentListHelpers.getTreatmentFromFormula(te.var, formula);
+                    const t = TreatmentListHelpers.getTreatmentFromFormula(te.id, formula);
                     if (t === null) {
                         return null;
                     }
@@ -129,7 +129,7 @@ export const TreatmentListScreen: React.FC = () => {
 
                     let ounces = te.ounces || 0;
                     const baseConcentration = t.concentration || 100;
-                    const concentrationOverride = TreatmentListHelpers.getConcentrationForTreatment(t.var, ds);
+                    const concentrationOverride = TreatmentListHelpers.getConcentrationForTreatment(t.id, ds);
 
                     if (concentrationOverride) {
                         ounces = (ounces * baseConcentration) / concentrationOverride;
@@ -137,7 +137,7 @@ export const TreatmentListScreen: React.FC = () => {
 
                     let units: Units = 'ounces';
                     let value = ounces;
-                    const scoop = TreatmentListHelpers.getScoopForTreatment(t.var, allScoops);
+                    const scoop = TreatmentListHelpers.getScoopForTreatment(t.id, allScoops);
 
                     if (scoop) {
                         // If we have a saved scoop, start with that:
@@ -146,9 +146,9 @@ export const TreatmentListScreen: React.FC = () => {
                         } else if (t.type === 'liquidChemical') {
                             value = Converter.wet(value, 'ounces', 'scoops', scoop);
                         }
-                    } else if (lastUnits[t.var]) {
+                    } else if (lastUnits[t.id]) {
                         // Otherwise, try to start w/ the same units as last time
-                        units = lastUnits[t.var] as Units;
+                        units = lastUnits[t.id] as Units;
                         if (units === 'scoops' && !scoop) {
                             /// If the scoop has been deleted
                             units = 'ounces';
@@ -178,7 +178,7 @@ export const TreatmentListScreen: React.FC = () => {
 
         const targets = TargetsHelper.resolveRangesForPool(formula, targetRangeOverridesForPool);
         const readingValues = readings.reduce((prev, current) => {
-            prev[current.var] = current.value;
+            prev[current.id] = current.value;
             return prev;
         }, {});
         const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readingValues, targets);
@@ -282,7 +282,7 @@ export const TreatmentListScreen: React.FC = () => {
         const modification = (ts: TreatmentState) => {
             let newValue = ts.ounces;
             let newUnits = ts.units;
-            const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.var, allScoops);
+            const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
 
             if (ts.treatment.type === 'dryChemical') {
                 newUnits = Converter.nextDry(ts.units as DryChemicalUnits, scoop);
@@ -307,7 +307,7 @@ export const TreatmentListScreen: React.FC = () => {
                 if (isNaN(newValue)) {
                     newValue = 0;
                 }
-                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.var, allScoops);
+                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
 
                 if (ts.treatment.type === 'dryChemical') {
                     newOunces = Converter.dry(newValue, ts.units as DryChemicalUnits, 'ounces', scoop);
@@ -392,7 +392,7 @@ export const TreatmentListScreen: React.FC = () => {
                     />
                 ) }
                 sections={ sections }
-                keyExtractor={ (item) => item.treatment.var }
+                keyExtractor={ (item) => item.treatment.id }
                 contentInsetAdjustmentBehavior="always"
                 canCancelContentTouches
                 stickySectionHeadersEnabled={ false }

@@ -2,14 +2,15 @@ import { Treatment } from '~/formulas/models/Treatment';
 
 export const swg_up: Treatment = {
     name: 'Increase Salt Generator',
-    var: 'swg_up',
+    id: 'swg_up',
     type: 'task',
-    function: (p, r, t, c) => {
-        if (r.NaCl === undefined) { return null; }
-
-        if ( r.NaCl < c.NaCl.min) {
-            return 1;
+    function: ({ pool, deltas }) => {
+        if (deltas.fc === undefined || deltas.fc <= 0) {
+            return null;
         }
-        return null;
+        return {
+            amount: 1,
+            effects: {}     // Technically, there will be an effect on FC, but not immediate enough for balancing needs.
+        };
     }
 };

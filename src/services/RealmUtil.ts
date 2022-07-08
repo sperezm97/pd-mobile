@@ -10,7 +10,7 @@ import { Util } from './Util';
 // Every time we add a property to these classes, we have to mirror them here (yuck).
 const PoolProps = ['name', 'gallons', 'waterType', 'wallType', 'objectId', 'formulaId', 'email', 'poolDoctorId'];
 const LogEntryProps = ['objectId', 'poolId', 'userTS', 'clientTS', 'serverTS', 'readingEntries', 'treatmentEntries', 'formulaId', 'formulaName', 'notes', 'poolDoctorId'];
-const TargetRangeProps = ['objectId', 'poolId', 'var', 'min', 'max'];
+const TargetRangeProps = ['objectId', 'poolId', 'id', 'min', 'max'];
 
 /**
  * if you need to parser, cast or convert any data form realm, you should use in this util class.
@@ -47,7 +47,7 @@ export class RealmUtil {
     static createReadingEntriesFromReadingValues = (values: ReadingValue[], formula: Formula): ReadingEntry[] => {
         const entries: ReadingEntry[] = [];
         values.forEach(v => {
-            const reading = Util.firstOrNull(formula.readings.filter(r => r.var === v.var));
+            const reading = Util.firstOrNull(formula.readings.filter(r => r.id === v.id));
             if (reading) {
                 const e = ReadingEntry.make(reading, v.value);
                 entries.push(e);

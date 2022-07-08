@@ -14,14 +14,14 @@ export namespace TargetsHelper {
         formula: Formula
     ): TargetRange[] => {
         const readingTargets: TargetRange[] = formula.readings.map(r => ({
-            var: r.var,
+            id: r.id,
             range: r.targetRange,
             description: null,
             name: r.name,
         }));
 
         formula.targets.forEach(ft => {
-            const existingIndex = readingTargets.findIndex(rt => rt.var === ft.var);
+            const existingIndex = readingTargets.findIndex(rt => rt.id === ft.id);
             if (existingIndex >= 0) {
                 readingTargets[existingIndex] = ft;
             } else {
@@ -39,25 +39,25 @@ export namespace TargetsHelper {
 
         // Get targets from readings:
         const targets: TargetRange[] = formula.readings.map(r => ({
-            var: r.var,
+            id: r.id,
             range: r.targetRange,
             name: r.name,
             description: null,
         }));
 
         formula.targets.forEach(ft => {
-            if (targets.findIndex(t => t.var === ft.var) < 0) {
+            if (targets.findIndex(t => t.id === ft.id) < 0) {
                 targets.push(ft);
             }
         });
 
         return targets.map((tr) => {
             const localOverride = Util.firstOrNull(
-                localOverridesForPool.filter((local) => local.var === tr.var)
+                localOverridesForPool.filter((local) => local.id === tr.id)
             );
             return {
                 range: { ...resolveMinMax(tr, localOverride) },
-                var: tr.var,
+                id: tr.id,
             };
         });
     };

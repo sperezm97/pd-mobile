@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const ph: Reading = {
     name: 'pH',
-    var: 'ph',
+    id: 'ph',
     defaultValue: 7.3,
     targetRange: {
         min: 7.2,
@@ -13,7 +13,7 @@ export const ph: Reading = {
         min: 5,
         max: 9,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: null,
     isDefaultOn: true,

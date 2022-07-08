@@ -1,14 +1,4 @@
-import { Util } from '~/services/Util';
-
-type TargetRangeOverrideMakeParams = {
-    min: number;
-    max: number;
-    poolId: string;
-    var: string;
-    objectId: string | null;
-};
-
-export class TargetRangeOverride {
+export class TargetRangeOverrideV1 {
     // The id of this object
     objectId!: string;
 
@@ -36,16 +26,4 @@ export class TargetRangeOverride {
             max: 'double',
         },
     };
-
-    static make(input: TargetRangeOverrideMakeParams): TargetRangeOverride {
-        let result = new TargetRangeOverride();
-
-        result.objectId = input.objectId ?? Util.generateUUID();
-        result.poolId = input.poolId;
-        result.var = input.var;
-        result.min = input.min;
-        result.max = input.max;
-
-        return result;
-    }
 }

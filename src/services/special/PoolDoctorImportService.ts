@@ -122,7 +122,7 @@ export namespace PoolDoctorImportService {
 
         const fakeReadingForSaving: Reading = {
             name: old.name,
-            var: nameToVarMap[old.name] ?? old.name,
+            id: nameToVarMap[old.name] ?? old.name,
             type: 'number',
             units: old.units ?? null,
             defaultValue: 0,
@@ -136,7 +136,7 @@ export namespace PoolDoctorImportService {
             },
             decimalPlaces: 1,
             isDefaultOn: true,
-            offsetReadingVar: null,
+            offsetReadingId: null,
         };
 
         return ReadingEntry.make(
@@ -167,8 +167,8 @@ export namespace PoolDoctorImportService {
         }
         const fakeTreatmentForSaving = {
             name: stripConcentrationFromTreatmentName(old.name),
-            var: getVarNameFromTreatmentName(old.name),
-            function: () => 0,    // doesn't matter
+            id: getVarNameFromTreatmentName(old.name),
+            function: () => null,    // doesn't matter
             concentration: getConcentrationFromTreatmentName(old.name),
             type,
         };

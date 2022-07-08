@@ -11,7 +11,7 @@ export const useFetchAllTreatments = (): Treatment[] => {
         (async () => {
             let rawTreatments = await ScoopService.getAllTreatments();
             rawTreatments = rawTreatments.filter((t) => {
-                return ds.scoops.findIndex((s) => s.var === t.var) < 0;
+                return ds.scoops.findIndex((s) => s.var === t.id) < 0;
             });
 
             setTreatments(rawTreatments);

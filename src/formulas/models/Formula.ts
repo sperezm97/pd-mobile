@@ -2,6 +2,7 @@ import { TargetRange } from './TargetRange';
 import { Reading } from './Reading';
 import { Treatment } from './Treatment';
 import { FormulaID } from './FormulaID';
+import { GetUpdatedReadingsAndDeltas } from './misc/UpdatedTargets';
 
 /**
  * Attempts to codify the instructions for a specific type of pool maintenance.
@@ -26,4 +27,8 @@ export interface Formula {
 
     // Any overrides to the default target ranges. These can still be overridden again by the end-user.
     targets: TargetRange[];
+
+    // Any logic to adjust the readings & deltas based on a combination of factors
+    // For example, if the fc is only slightly low, but we need breakpoint chlorination to balance the cc.
+    adjusters: GetUpdatedReadingsAndDeltas[];
 }

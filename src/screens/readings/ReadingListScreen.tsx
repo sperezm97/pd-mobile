@@ -26,7 +26,7 @@ export const ReadingListScreen: React.FC = () => {
     const [isSliding, setIsSliding] = React.useState(false);
     const [readingStates, setReadingStates] = React.useState<ReadingState[]>([]);
     const pool = useTypedSelector(state => state.selectedPool);
-    const recipe = useLoadFormulaHook(pool?.formulaId);
+    const formula = useLoadFormulaHook(pool?.formulaId);
     const { setOptions, navigate } = useNavigation<PDStackNavigationProps>();
     const theme = useTheme();
     const lastLogEntry = useLastLogEntryHook(pool?.objectId ?? '');
@@ -37,26 +37,26 @@ export const ReadingListScreen: React.FC = () => {
 
     React.useEffect(() => {
         setOptions({ gestureResponseDistance: 5 });
-        if (recipe) {
+        if (formula) {
             const readingsOnByDefault = new Set<string>();
             if (lastLogEntry) {
                 lastLogEntry.readingEntries
-                    .forEach(r => readingsOnByDefault.add(r.var));
+                    .forEach(r => readingsOnByDefault.add(r.id));
             } else {
-                recipe.readings
+                formula.readings
                     .filter(r => r.isDefaultOn)
-                    .forEach(r => readingsOnByDefault.add(r.var));
+                    .forEach(r => readingsOnByDefault.add(r.id));
             }
-            const initialReadingStates = recipe.readings.map((r) => ({
+            const initialReadingStates = formula.readings.map((r) => ({
                 reading: r,
                 value: r.defaultValue.toFixed(r.decimalPlaces),
-                isOn: readingsOnByDefault.has(r.var),
+                isOn: readingsOnByDefault.has(r.id),
             }));
 
             // Just incase we had some old reading entries laying around:
             readingStates.forEach((rs) => {
                 initialReadingStates.forEach((is) => {
-                    if (is.reading.var === rs.reading.var) {
+                    if (is.reading.id === rs.reading.id) {
                         is.value = rs.value || is.reading.defaultValue.toFixed(is.reading.decimalPlaces);
                         is.isOn = rs.isOn;
                     }
@@ -66,7 +66,7 @@ export const ReadingListScreen: React.FC = () => {
             setReadingStates(initialReadingStates);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [recipe?.id, pool]);
+    }, [formula?.id, pool]);
 
     const handleCalculatePressed = (): void => {
         Haptic.medium();
@@ -84,7 +84,7 @@ export const ReadingListScreen: React.FC = () => {
         let isChanged = false;
         const rs = Util.deepCopy(readingStates);
         rs.forEach((r) => {
-            if (r.reading.var === varName && !r.isOn) {
+            if (r.reading.id === varName && !r.isOn) {
                 isChanged = true;
                 r.isOn = true;
             }
@@ -114,7 +114,7 @@ export const ReadingListScreen: React.FC = () => {
         const rs = Util.deepCopy(readingStates);
         let isChanged = false;
         rs.forEach((r) => {
-            if (r.reading.var === varName) {
+            if (r.reading.id === varName) {
                 const newValue = value.toFixed(r.reading.decimalPlaces);
                 if (newValue !== r.value) {
                     isChanged = true;
@@ -131,7 +131,7 @@ export const ReadingListScreen: React.FC = () => {
     const handleTextboxUpdated = (varName: string, text: string) => {
         const rs = Util.deepCopy(readingStates);
         rs.forEach((r) => {
-            if (r.reading.var === varName) {
+            if (r.reading.id === varName) {
                 r.value = text;
             }
         });
@@ -141,7 +141,7 @@ export const ReadingListScreen: React.FC = () => {
     const handleTextboxDismissed = (varName: string, text: string) => {
         const rs = Util.deepCopy(readingStates);
         rs.forEach((r) => {
-            if (r.reading.var === varName) {
+            if (r.reading.id === varName) {
                 r.value = text;
                 r.isOn = text.length > 0;
             }
@@ -153,7 +153,7 @@ export const ReadingListScreen: React.FC = () => {
         Haptic.light();
         const rs = Util.deepCopy(readingStates);
         rs.forEach((r) => {
-            if (r.reading.var === varName) {
+            if (r.reading.id === varName) {
                 r.isOn = !r.isOn;
                 if (r.isOn && !r.value) {
                     r.value = r.reading.defaultValue.toFixed(r.reading.decimalPlaces);
@@ -206,7 +206,7 @@ export const ReadingListScreen: React.FC = () => {
                         />
                     ) }
                     sections={ sections }
-                    keyExtractor={ (item) => item.reading.var }
+                    keyExtractor={ (item) => item.reading.id }
                     contentInsetAdjustmentBehavior="always"
                     stickySectionHeadersEnabled={ false }
                     canCancelContentTouches={ true }

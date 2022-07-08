@@ -29,7 +29,7 @@ interface TargetFormFields {
  *  List Item for Custom Targets by Defaults values from each wallType.
  */
 const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
-    const locallySavedOverride = useRealmPoolTargetRange(tr.var, pool?.objectId); // ?? ({} as TargetRangeOverride);
+    const locallySavedOverride = useRealmPoolTargetRange(tr.id, pool?.objectId); // ?? ({} as TargetRangeOverride);
     const theme = useTheme();
 
     // The min & max will sometimes be equal to the defaults, but we need to determine both for the sake of comparison
@@ -84,10 +84,13 @@ const CustomTargetsItem: React.FC<CustomTargetsItemProps> = ({ tr, pool }) => {
             min: formValues.min.length ? +formValues.min : formulaDefaults.min,
             max: formValues.max.length ? +formValues.max : formulaDefaults.max,
             poolId: pool.objectId,
-            var: tr.var,
+            id: tr.id,
         };
 
+        console.log('Saving: ');
+        console.log(JSON.stringify(newLocalOverride));
         const mapCustomTarget = TargetRangeOverride.make(newLocalOverride);
+        console.log(JSON.stringify(mapCustomTarget));
         await Database.saveNewCustomTarget(mapCustomTarget);
     };
 

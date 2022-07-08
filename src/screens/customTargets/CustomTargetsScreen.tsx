@@ -32,7 +32,7 @@ export const CustomTargetsScreen : React.FC = () => {
                 keyboardShouldPersistTaps={ 'handled' }
                 data={ targets }
                 renderItem={ ({ item }: { item: TargetRange }) => <CustomTargetsItem tr={ item } pool={ selectedPool } /> }
-                keyExtractor={ (item: TargetRange) => item.var }
+                keyExtractor={ (item: TargetRange) => item.id }
                 style={ [styles.container , { backgroundColor: theme.colors.background }] }
                 contentContainerStyle={ styles.content }
                 contentInset={ insets }

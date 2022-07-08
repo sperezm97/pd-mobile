@@ -8,8 +8,7 @@ export interface Reading {
     name: string;
 
     // This reading's variable name for use in the treatment functions
-    // TODO: rename this to "id" or something
-    var: string;
+    id: string;
 
     // Most of these will be ReadingType.number
     type: ReadingType;
@@ -32,7 +31,7 @@ export interface Reading {
     isDefaultOn: boolean;
 
     // If there is another reading that affects the possible range of this reading:
-    offsetReadingVar: string | null; // This really only affects the total-chlorine vs free-chlorine.
+    offsetReadingId: string | null; // This really only affects the total-chlorine vs free-chlorine.
 }
 
 // Eventually, this will be 'number'

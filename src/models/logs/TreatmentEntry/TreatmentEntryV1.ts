@@ -1,9 +1,9 @@
-import { Treatment, TreatmentType } from '~/formulas/models/Treatment';
+import { TreatmentType } from '~/formulas/models/Treatment';
 
 /**
  * Represents the amount or state of a treatment or task
  */
-export class TreatmentEntry {
+export class TreatmentEntryV1 {
     // The number of ounces used (for graphing, not displaying)
     ounces!: number;
 
@@ -16,7 +16,7 @@ export class TreatmentEntry {
     // The actual concentration used, [1,100]
     concentration?: number;
 
-    // Variable name (defined by the recipe)
+    // Variable name (defined by the formula)
     var!: string;
 
     // human-friendly name of the reading
@@ -37,23 +37,4 @@ export class TreatmentEntry {
             type: 'string',
         },
     };
-
-    static make(
-        treatment: Treatment,
-        ounces: number,
-        displayAmount: string,
-        displayUnits: string,
-        concentration?: number,
-    ): TreatmentEntry {
-        let entry = new TreatmentEntry();
-
-        entry.treatmentName = treatment.name;
-        entry.var = treatment.var;
-        entry.displayAmount = displayAmount;
-        entry.displayUnits = displayUnits;
-        entry.concentration = concentration || treatment.concentration;
-        entry.ounces = ounces;
-        entry.type = treatment.type;
-        return entry;
-    }
 }

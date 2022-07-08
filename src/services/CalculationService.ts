@@ -13,7 +13,7 @@ import { Util } from './Util';
 
 export interface CalculationResult {
     value: number | null;
-    var: string;
+    id: string;
 }
 
 export class CalculationService {
@@ -21,7 +21,7 @@ export class CalculationService {
     static run = (req: FormulaRunRequest): CalculationResult[] => {
         const res = calculate(req);
         return Object.keys(res).map(k => ({
-            var: k,
+            id: k,
             value: res[k],
         }));
     }
@@ -49,13 +49,13 @@ export class CalculationService {
             // filter all null treatments
             .filter(tv => (tv.value !== null) && (tv.value !== undefined))
             // filter 0-value treatments for all non-calculations (for instance, we want to show LSI = 0, but not "add 0 ounces of x")
-            .filter(tv => (tv.value !== 0) || (CalculationService.getTreatment(tv.var, formula)?.type === 'calculation'))
+            .filter(tv => (tv.value !== 0) || (CalculationService.getTreatment(tv.id, formula)?.type === 'calculation'))
             .forEach((tv) => {
-                const correspondingTreatment = CalculationService.getTreatment(tv.var, formula);
+                const correspondingTreatment = CalculationService.getTreatment(tv.id, formula);
                 if (correspondingTreatment) {
                     if (tv.value) {
                         tes.push({
-                            var: tv.var,
+                            id: tv.id,
                             displayAmount: tv.value.toFixed(1),
                             treatmentName: correspondingTreatment.name,
                             ounces: tv.value,
@@ -70,7 +70,7 @@ export class CalculationService {
     };
 
     static getTreatment = (variable: string, formula: Formula): Treatment | null => {
-        return Util.firstOrNull(formula.treatments.filter(t => t.var === variable)) ?? null;
+        return Util.firstOrNull(formula.treatments.filter(t => t.id === variable)) ?? null;
     }
 
     static mapTreatmentStatesToTreatmentEntries = (tss: TreatmentState[]): TreatmentEntry[] => {

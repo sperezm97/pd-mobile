@@ -195,28 +195,32 @@ export class Database {
     };
 
     static saveNewCustomTarget = async (customTarget: TargetRangeOverride) => {
+        console.log('0');
         const realm = Database.realm;
         try {
             // Delete previous values (if any)
+            console.log('1');
             realm.write(() => {
                 const previousOverrides = Database.realm
                     .objects<TargetRangeOverride>(TargetRangeOverride.schema.name)
-                    .filtered('poolId = $0 AND var = $1', customTarget.poolId, customTarget.var);
+                    .filtered('poolId = $0 AND id = $1', customTarget.poolId, customTarget.id);
                 realm.delete(previousOverrides);
             });
             // Store some new values
             realm.write(() => {
+                console.log('2');
                 realm.create<TargetRangeOverride>(
                     TargetRangeOverride.schema.name,
                     {
                         objectId: customTarget.objectId,
                         poolId: customTarget.poolId,
-                        var: customTarget.var,
+                        id: customTarget.id,
                         min: customTarget.min,
                         max: customTarget.max,
                     },
                     Realm.UpdateMode.Modified,
                 );
+                console.log('3');
             });
             return Promise.resolve();
         } catch (error) {
@@ -238,7 +242,7 @@ export class Database {
             realm.write(() => {
                 const previousOverrides = Database.realm
                     .objects<TargetRangeOverride>(TargetRangeOverride.schema.name)
-                    .filtered('poolId = $0 AND var = $1', customTarget.poolId, customTarget.var);
+                    .filtered('poolId = $0 AND id = $1', customTarget.poolId, customTarget.id);
                 realm.delete(previousOverrides);
             });
             return Promise.resolve();

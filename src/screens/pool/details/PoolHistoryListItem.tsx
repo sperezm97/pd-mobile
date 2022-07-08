@@ -76,11 +76,11 @@ export const PoolHistoryListItem: React.FunctionComponent<PoolHistoryListItemPro
     let expandedContent: JSX.Element | null = null;
     if (props.isExpanded) {
         const readings = props.logEntry.readingEntries.map((re, i) => (
-            <ReadingRow key={ 'r' + re.var + props.logEntry.objectId + `${i}` } re={ re } />
+            <ReadingRow key={ 'r' + re.id + props.logEntry.objectId + `${i}` } re={ re } />
         ));
 
         const treatments = props.logEntry.treatmentEntries.map((te, i) => (
-            <TreatmentRow key={ 't' + te.var + props.logEntry.objectId + `${i}` } te={ te } />
+            <TreatmentRow key={ 't' + te.id + props.logEntry.objectId + `${i}` } te={ te } />
         ));
 
         expandedContent = <>

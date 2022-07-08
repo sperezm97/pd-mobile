@@ -22,7 +22,7 @@ export class ChartService {
             entry.readingEntries.forEach((reading) => {
                 const graphable: Graphable = {
                     title: reading.readingName,
-                    id: reading.var,
+                    id: reading.id,
                     idealMin: reading.idealMin || null,
                     idealMax: reading.idealMax || null,
                 };
@@ -44,7 +44,7 @@ export class ChartService {
             entry.treatmentEntries.forEach((treatment) => {
                 const graphable: Graphable = {
                     title: treatment.treatmentName,
-                    id: treatment.var,
+                    id: treatment.id,
                     idealMin: null,
                     idealMax: null,
                 };
@@ -64,13 +64,13 @@ export class ChartService {
             let values: number[] = [];
             entries.forEach((entry) => {
                 entry.readingEntries.forEach((reading) => {
-                    if (reading.var === graphable.id) {
+                    if (reading.id === graphable.id) {
                         dates.push(entry.userTS);
                         values.push(reading.value);
                     }
                 });
                 entry.treatmentEntries.forEach((treatment) => {
-                    if (treatment.var === graphable.id) {
+                    if (treatment.id === graphable.id) {
                         dates.push(entry.userTS);
                         values.push(treatment.ounces);
                     }

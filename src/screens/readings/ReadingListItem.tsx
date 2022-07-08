@@ -67,13 +67,13 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
     };
 
     const onTextChange = (newText: string) => {
-        props.onTextboxUpdated(r.var, newText);
+        props.onTextboxUpdated(r.id, newText);
     };
 
     const onTextEndEditing = (event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
         setTextIsEditing(false);
         const finalText = event.nativeEvent.text;
-        props.onTextboxFinished(r.var, finalText);
+        props.onTextboxFinished(r.id, finalText);
     };
 
     const onSliderStart = () => {
@@ -83,7 +83,7 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
 
     const onSliderEnd = () => {
         setIsSliding(false);
-        props.onSlidingComplete(r.var);
+        props.onSlidingComplete(r.id);
     };
 
     const a = useStandardListAnimation(props.index, 'slow');
@@ -91,7 +91,7 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
     return (
         <AV y={ a.containerY } opacity={ a.opacity }>
             <PDView style={ styles.container }>
-                <TouchableScale onPress={ () => props.handleIconPressed(r.var) } activeScale={ 0.98 }>
+                <TouchableScale onPress={ () => props.handleIconPressed(r.id) } activeScale={ 0.98 }>
                     <PDView bgColor="white" borderColor="border" style={ styles.content }>
                         <PDView style={ styles.topRow }>
                             <Image style={ styles.circleImage } source={ leftImageSource } />
@@ -119,7 +119,7 @@ export const ReadingListItem: React.FunctionComponent<ReadingListItemProps> = (p
                             thumbStyle={ { backgroundColor: 'transparent' } }
                             onSlidingStart={ onSliderStart }
                             onSlidingComplete={ onSliderEnd }
-                            onValueChange={ (value: number) => props.onSliderUpdatedValue(r.var, value) }
+                            onValueChange={ (value: number) => props.onSliderUpdatedValue(r.id, value) }
                             value={ sliderValue }
                             step={ sliderStep }
                             thumbTouchSize={ { width: 55, height: 55 } }

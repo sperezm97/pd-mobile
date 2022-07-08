@@ -75,14 +75,14 @@ export const ScoopDetailsScreen = () => {
             // Each treatment can only have a single scoop... for now:
             allTreatments = allTreatments.filter((t) => {
                 return (
-                    ds.scoops.findIndex((s) => s.var === t.var) < 0 ||
-                    (prevScoop && prevScoop.var === t.var)
+                    ds.scoops.findIndex((s) => s.var === t.id) < 0 ||
+                    (prevScoop && prevScoop.var === t.id)
                 );
             });
             setTreatments(allTreatments);
 
             if (prevScoop) {
-                const listContainingOnlyActiveTreatment = allTreatments.filter((t) => t.var === prevScoop.var);
+                const listContainingOnlyActiveTreatment = allTreatments.filter((t) => t.id === prevScoop.var);
                 if (listContainingOnlyActiveTreatment.length > 0) {
                     setTreatment(listContainingOnlyActiveTreatment[0]);
                 }
@@ -135,11 +135,11 @@ export const ScoopDetailsScreen = () => {
             subtitle: 'Select Chemical',
             items: treatmentList.map((t) => ({
                 name: Util.getDisplayNameForTreatment(t),
-                value: t.var,
+                value: t.id,
             })),
             pickerKey: 'scoop_chem',
             color: 'pink',
-            prevSelection: treatment?.var || prevScoop?.var,
+            prevSelection: treatment?.id || prevScoop?.var,
         };
         navigate('PickerScreen', pickerProps);
     };
@@ -163,7 +163,7 @@ export const ScoopDetailsScreen = () => {
         }
 
         const newScoop: Scoop = {
-            var: treatment.var,
+            var: treatment.id,
             type: treatment.type,
             displayUnits: units,
             displayValue: textValue,
@@ -215,7 +215,7 @@ export const ScoopDetailsScreen = () => {
     };
 
     const handleDeleteConfirmed = async () => {
-        const newScoops = Util.deepCopy(ds.scoops).filter((s) => s.var !== treatment?.var);
+        const newScoops = Util.deepCopy(ds.scoops).filter((s) => s.var !== treatment?.id);
         await updateDS({ scoops: newScoops });
         goBack();
     };

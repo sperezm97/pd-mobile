@@ -13,13 +13,13 @@ export const readingEntriesReducer = createReducer([] as ReadingValue[], (builde
             let readingIsNew = true;
 
             state.forEach((r) => {
-                if (r.var === reading.var) {
+                if (r.id === reading.id) {
                     r.value = value;
                     readingIsNew = false;
                 }
             });
             if (readingIsNew) {
-                state.push({ var: reading.var, value });
+                state.push({ id: reading.id, value });
             }
 
             return state;

@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const fc: Reading = {
     name: 'Free Chlorine',
-    var: 'fc',
+    id: 'fc',
     defaultValue: 3,
     targetRange: {
         min: 3,
@@ -13,7 +13,7 @@ export const fc: Reading = {
         min: 0,
         max: 7,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: true,

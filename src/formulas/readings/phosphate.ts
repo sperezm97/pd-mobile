@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const phosphate: Reading = {
     name: 'Phosphate',
-    var: 'phosphate',
+    id: 'phosphate',
     defaultValue: 100,
     targetRange: {
         min: 0,
@@ -13,7 +13,7 @@ export const phosphate: Reading = {
         min: 0,
         max: 1000,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: false,

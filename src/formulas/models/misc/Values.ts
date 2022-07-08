@@ -4,7 +4,7 @@ import { Range } from './Range';
 
 /// This is a tiny data type to hold those.
 export interface ReadingValue {
-    var: string;
+    id: string;
     value: number;
 }
 
@@ -21,8 +21,4 @@ export interface EffectiveTargetRanges {
     [varName:string]: Range;
 }
 
-/// Just a dictionary of skipped values
-/// truly, we should do away with this.
-export interface SkippedReadings {
-    [varName:string]: boolean;
-}
+export type EffectValues = ReadingValues;

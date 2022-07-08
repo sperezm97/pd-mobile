@@ -10,8 +10,7 @@ export interface Treatment {
     name: string;
 
     // The treatment's variable name, for use in subsequent treatment functions in the same recipe
-    // TODO: rename this to "id" or something
-    var: string;
+    id: string;
 
     // The javascript function that determines how much (if any) of the treatment is necessary
     function: TreatmentFunction;

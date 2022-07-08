@@ -10,7 +10,6 @@ import { temp_c } from '~/formulas/readings/temp_c';
 import { temp_f } from '~/formulas/readings/temp_f';
 import { baking_soda } from '~/formulas/treatments/baking_soda';
 
-import { calc_hypo } from '~/formulas/treatments/calc_hypo';
 import { cal_chlor } from '~/formulas/treatments/cal_chlor';
 import { lsi } from '~/formulas/treatments/lsi';
 import { m_acid } from '~/formulas/treatments/m_acid';
@@ -19,6 +18,9 @@ import { cya as cya_treatment } from '~/formulas/treatments/cya';
 import { swg_up } from '~/formulas/treatments/swg_up';
 import { swg_down } from '~/formulas/treatments/swg_down';
 import { phosphate_rem } from '~/formulas/treatments/phosphate_rem';
+import { dichlor } from '../treatments/dichlor';
+import { ccTarget } from '../targets/ccTarget';
+import { breakpointFCAdjuster } from '../adjusters/breakpoint';
 
 
 /// This is the default formula for salt-water pools:
@@ -37,9 +39,14 @@ export const saltFormula: Formula = {
         temp_c,
         phosphate,
     ],
-    targets: [],
+    targets: [
+        ccTarget
+    ],
+    adjusters: [
+        breakpointFCAdjuster
+    ],
     treatments: [
-        calc_hypo,
+        dichlor,
         soda_ash,
         baking_soda,
         m_acid,

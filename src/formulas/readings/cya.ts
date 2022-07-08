@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const cya: Reading = {
     name: 'Cyanuric Acid',
-    var: 'cya',
+    id: 'cya',
     defaultValue: 40,
     targetRange: {
         min: 30,
@@ -13,7 +13,7 @@ export const cya: Reading = {
         min: 0,
         max: 80,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: true,

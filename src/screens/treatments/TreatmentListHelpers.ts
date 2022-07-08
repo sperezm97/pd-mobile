@@ -19,7 +19,7 @@ export class TreatmentListHelpers {
     static getTreatmentFromFormula= (treatmentVarName: string, formula: Formula): Treatment | null => {
         for (let i = 0; i < formula.treatments.length; i++) {
             const t = formula.treatments[i];
-            if (t.var === treatmentVarName) {
+            if (t.id === treatmentVarName) {
                 return t;
             }
         }
@@ -49,7 +49,7 @@ export class TreatmentListHelpers {
         const tss = Util.deepCopy(treatmentStates);
         let didChange = false;
         tss.forEach((ts) => {
-            if (ts.treatment.var === varName) {
+            if (ts.treatment.id === varName) {
                 didChange = modification(ts);
             }
         });
@@ -67,7 +67,7 @@ export class TreatmentListHelpers {
         treatmentStates
             .filter((ts) => ts.isOn)
             .forEach((ts) => {
-                newUnits[ts.treatment.var] = ts.units;
+                newUnits[ts.treatment.id] = ts.units;
             });
         return newUnits;
     };

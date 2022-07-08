@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const tds: Reading = {
     name: 'TDS',
-    var: 'tds',
+    id: 'tds',
     defaultValue: 324,
     targetRange: {
         min: 0,
@@ -13,7 +13,7 @@ export const tds: Reading = {
         min: 0,
         max: 4000,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'ppm',
     isDefaultOn: false,

@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const tc: Reading = {
     name: 'Total Chlorine',
-    var: 'tc',
+    id: 'tc',
     defaultValue: 3,
     targetRange: {
         min: 0,     // plus the offset of fc, right?
@@ -13,7 +13,7 @@ export const tc: Reading = {
         min: 0,
         max: 7,
     },
-    offsetReadingVar: 'fc',
+    offsetReadingId: 'fc',
     type: 'number',
     units: 'ppm',
     isDefaultOn: true,

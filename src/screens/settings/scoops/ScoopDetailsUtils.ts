@@ -5,7 +5,7 @@ import { Util } from '~/services/Util';
 
 export const getTreatmentWithVar = (treatments: Treatment[], varName: string): Treatment | null => {
     return Util.firstOrNull(
-        treatments.filter((t) => t.var === varName)
+        treatments.filter((t) => t.id === varName)
     );
 };
 

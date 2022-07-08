@@ -2,7 +2,7 @@ import { Reading } from '~/formulas/models/Reading';
 
 export const temp_c: Reading = {
     name: 'Temperature',
-    var: 'temp_c',
+    id: 'temp_c',
     defaultValue: 27,
     targetRange: {
         min: 24,
@@ -13,7 +13,7 @@ export const temp_c: Reading = {
         min: 0,
         max: 60,
     },
-    offsetReadingVar: null,
+    offsetReadingId: null,
     type: 'number',
     units: 'c',
     isDefaultOn: false,

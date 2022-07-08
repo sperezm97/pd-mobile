@@ -104,8 +104,8 @@ export const useRealmPoolTargetRangesForPool = (poolId: string | null): TargetRa
     return data;
 };
 
-/// This pulls a single target range override for a given pool & variable.
-export const useRealmPoolTargetRange = (variable: string, poolId?: string): TargetRangeOverride | null => {
+/// This pulls a single target range override for a given pool & target_id.
+export const useRealmPoolTargetRange = (id: string, poolId?: string): TargetRangeOverride | null => {
     const data = useRealmPoolTargetRangesForPool(poolId ?? null);
-    return Util.firstOrNull(data.filter((ct) => ct.var === variable));
+    return Util.firstOrNull(data.filter((ct) => ct.id === id));
 };

@@ -2,9 +2,11 @@ import { Treatment } from '~/formulas/models/Treatment';
 
 export const lsi: Treatment = {
     name: 'LSI',
-    var: 'lsi',
+    id: 'lsi',
     type: 'calculation',
-    function: (p, r, t, c) => {
+    function: ({ extra }) => {
+        const r = extra.readings;
+
         // We need these 4 readings + temperature to calculate this:
         if ((r.ch === undefined)
         || (r.ph === undefined)
@@ -27,6 +29,10 @@ export const lsi: Treatment = {
         if (isNaN(result) || !isFinite(result)) {
             return null;
         }
-        return result;
+
+        return {
+            amount: result,
+            effects: {},
+        };
     }
 };
