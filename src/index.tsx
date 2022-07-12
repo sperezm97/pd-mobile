@@ -17,4 +17,5 @@ const PoolDash: React.FunctionComponent<{}> = () => {
         </Provider>
     );
 };
+
 AppRegistry.registerComponent('pooldash', () => PoolDash);
