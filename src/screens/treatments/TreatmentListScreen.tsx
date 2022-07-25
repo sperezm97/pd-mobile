@@ -4,27 +4,21 @@ import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-vie
 import { KeyboardButton } from '~/components/buttons/KeyboardButton';
 import { ScreenHeader } from '~/components/headers/ScreenHeader';
 import { PDSafeAreaView } from '~/components/PDSafeAreaView';
-import { PDSpacing, useTheme } from '~/components/PDTheme';
+import { PDSpacing } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
-import { useLoadFormulaHook, useRealmPoolTargetRangesForPool } from '~/hooks/RealmPoolHook';
 import { LogEntry } from '~/models/logs/LogEntry';
 import { DryChemicalUnits, Units, WetChemicalUnits } from '~/models/TreatmentUnits';
-import { PDNavParams } from '~/navigator/shared';
-import { dispatch, useTypedSelector } from '~/redux/AppState';
+import { dispatch } from '~/redux/AppState';
 import { clearPickerState } from '~/redux/picker/Actions';
 import { clearReadings } from '~/redux/readingEntries/Actions';
 import { Database } from '~/repository/Database';
 import { CalculationResult, CalculationService } from '~/services/CalculationService';
 import { Config } from '~/services/Config/AppConfig';
-import { useDeviceSettings } from '~/services/DeviceSettings/Hooks';
 import { Haptic } from '~/services/HapticService';
 import { RealmUtil } from '~/services/RealmUtil';
-import { FormulaService } from '~/services/FormulaService';
 import { Converter } from '~/services/TreatmentUnitsService';
 import { Util } from '~/services/Util';
 
-import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 
 import { TargetsHelper } from '../customTargets/TargetHelper';
 import { PDPickerRouteProps } from '../picker/PickerScreen';
@@ -32,35 +26,17 @@ import { TreatmentListFooter } from './TreatmentListFooter';
 import { TreatmentListHelpers, TreatmentState } from './TreatmentListHelpers';
 import { TreatmentListItem } from './TreatmentListItem';
 import { PlayButton } from '~/components/buttons/PlayButton';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TreatmentListHeader } from './TreatmentListHeader';
 import { PDProgressBar } from '~/components/PDProgressBar';
 import { useStandardStatusBar } from '~/hooks/useStatusBar';
+import { useTreatmentListState } from './UseTreatmentListState';
+
 
 export const TreatmentListScreen: React.FC = () => {
+
+    const state = useTreatmentListState();
+    const { formula, pool, allScoops, targetRangeOverridesForPool, setTreatmentStates, setHaveCalculationsProcessed, readings, ds } = state;
     useStandardStatusBar();
-    const readings = useTypedSelector((state) => state.readingEntries);
-    const pool = useTypedSelector(state => state.selectedPool);
-    const pickerState = useTypedSelector((state) => state.pickerState);
-    const { ds, updateDS } = useDeviceSettings();
-    const formulaId = pool?.formulaId || FormulaService.defaultFormulaId;
-    const [treatmentStates, setTreatmentStates] = React.useState<TreatmentState[]>([]);
-    const [hasSelectedAnyTreatments, setHasSelectedAnyTreatments] = React.useState(false);
-    const [notes, setNotes] = React.useState('');
-    const { navigate } = useNavigation<StackNavigationProp<PDNavParams>>();
-    // I hate this... it's dirty. We should move this into the picker screen maybe?
-    const [concentrationTreatmentVar, updateConcentrationTreatment] = React.useState<string | null>(null);
-    const formula = useLoadFormulaHook(formulaId);
-    const targetRangeOverridesForPool = useRealmPoolTargetRangesForPool(pool?.objectId ?? null);
-    const routesInNavStack = useNavigationState(state => state.routes.map(r => r.name));
-    const theme = useTheme();
-    const insets = useSafeAreaInsets();
-    const [isSavingDebounce, setIsSavingDebounce] = React.useState(false);
-    const allScoops = ds.scoops;
-    const [haveCalculationsProcessed, setHaveCalculationsProcessed] = React.useState(false);
-    const [userTS, setUserTS] = React.useState<number>(Date.now());
-    const scrollViewRef = React.useRef<KeyboardAwareSectionList>(null);
-    const [isShowingHelp, setIsShowingHelp] = React.useState(false);
 
     const keyboardAccessoryViewId = 'dedgumThisIsSomeReallyUniqueTextTreatmentListKeyboard';
 
@@ -68,17 +44,17 @@ export const TreatmentListScreen: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => {
         if (
-            pickerState &&
-            pickerState.key === 'chem_concentration' &&
-            pickerState.value !== null &&
-            concentrationTreatmentVar
+            state.pickerState &&
+            state.pickerState.key === 'chem_concentration' &&
+            state.pickerState.value !== null &&
+            state.concentrationTreatmentVar
         ) {
-            const newConcentration = Math.min(Math.max(parseInt(pickerState.value, 10), 1), 100);
+            const newConcentration = Math.min(Math.max(parseInt(state.pickerState.value, 10), 1), 100);
 
             const treatmentModification = (ts: TreatmentState) => {
                 const newOunces = (ts.ounces * ts.concentration) / newConcentration;
                 let newValue = newOunces;
-                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
+                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, state.allScoops);
                 if (ts.treatment.type === 'dryChemical') {
                     newValue = Converter.dryOunces(newOunces, ts.units as DryChemicalUnits, scoop);
                 } else if (ts.treatment.type === 'liquidChemical') {
@@ -92,20 +68,20 @@ export const TreatmentListScreen: React.FC = () => {
             };
 
             const didChange = TreatmentListHelpers.updateTreatmentState(
-                concentrationTreatmentVar,
+                state.concentrationTreatmentVar,
                 treatmentModification,
-                treatmentStates,
-                setTreatmentStates,
+                state.treatmentStates,
+                state.setTreatmentStates,
             );
 
             dispatch(clearPickerState());
-            updateConcentrationTreatment(null);
+            state.updateConcentrationTreatment(null);
 
             if (didChange) {
-                const newTreatments = Util.deepCopy(ds.treatments);
-                newTreatments.concentrations[concentrationTreatmentVar] = newConcentration;
+                const newTreatments = Util.deepCopy(state.ds.treatments);
+                newTreatments.concentrations[state.concentrationTreatmentVar] = newConcentration;
                 // Don't await it, be bold:
-                updateDS({ treatments: newTreatments });
+                state.updateDS({ treatments: newTreatments });
             }
         }
     });
@@ -184,29 +160,29 @@ export const TreatmentListScreen: React.FC = () => {
         const formulaRunRequest = CalculationService.getFormulaRunRequest(formula, pool, readingValues, targets);
         const formulaResults = CalculationService.run(formulaRunRequest);
         handleCalculatorResults(formulaResults);
-    }, [allScoops, ds, formula, pool, readings, targetRangeOverridesForPool]);
+    }, [formula, pool, allScoops, targetRangeOverridesForPool, setTreatmentStates, setHaveCalculationsProcessed, readings, ds]);
 
-    if (!formula || !pool) {
+    if (!state.formula || !state.pool) {
         return <View />;
     }
 
     const save = async () => {
         // manual debouncing
-        if (isSavingDebounce) { return; }
-        setIsSavingDebounce(true);
+        if (state.isSavingDebounce) { return; }
+        state.setIsSavingDebounce(true);
 
         // sanity check (to appease typescript):
-        if (!pool?.objectId) { return; }
+        if (!state.pool?.objectId) { return; }
 
-        const shouldSaveAllTreatments = !hasSelectedAnyTreatments;
+        const shouldSaveAllTreatments = !state.hasSelectedAnyTreatments;
 
         /// setState hooks don't modify the value in the current context -- so to actually turn the treatment entries "on",
         /// we have to do it somewhat manually (yuck, I should clean this up).
-        let finalTreatmentStates = Util.deepCopy(treatmentStates);
+        let finalTreatmentStates = Util.deepCopy(state.treatmentStates);
         if (shouldSaveAllTreatments) {
             Haptic.heavy();
             finalTreatmentStates = finalTreatmentStates.map(x => ({ ...x, isOn: true }));
-            setTreatmentStates(tss => tss.map(x => ({ ...x, isOn: true })));
+            state.setTreatmentStates(tss => tss.map(x => ({ ...x, isOn: true })));
             Haptic.heavy();
             await Util.delay(0.15);
         } else {
@@ -217,32 +193,32 @@ export const TreatmentListScreen: React.FC = () => {
         const ts = Util.generateTimestamp();
         const tes = CalculationService.mapTreatmentStatesToTreatmentEntries(finalTreatmentStates);
 
-        const readingEntries = RealmUtil.createReadingEntriesFromReadingValues(readings, formula);
+        const readingEntries = RealmUtil.createReadingEntriesFromReadingValues(state.readings, state.formula);
         const logEntry = LogEntry.make(     // TODO: make these named / keyed properties.
             id,
-            pool.objectId,
+            state.pool.objectId,
             ts,
-            userTS,
+            state.userTS,
             null,
             readingEntries,
             tes,
-            formulaId,
-            formula.name,
-            notes,
+            state.formulaId,
+            state.formula.name,
+            state.notes,
             null
         );
 
         await Database.saveNewLogEntry(logEntry);
         // Save the last-used units:
-        const newTreatments = Util.deepCopy(ds.treatments);
+        const newTreatments = Util.deepCopy(state.ds.treatments);
         newTreatments.units = TreatmentListHelpers.getUpdatedLastUsedUnits(
             newTreatments.units,
             finalTreatmentStates,
         );
-        updateDS({ treatments: newTreatments });
+        state.updateDS({ treatments: newTreatments });
         dispatch(clearReadings());
-        const navigateBackScreen = routesInNavStack.includes('PoolScreen') ? 'PoolScreen' : 'Home';
-        navigate(navigateBackScreen);
+        const navigateBackScreen = state.routesInNavStack.includes('PoolScreen') ? 'PoolScreen' : 'Home';
+        state.navigate.navigate(navigateBackScreen);
     };
 
     const handleIconPressed = (varName: string) => {
@@ -261,7 +237,7 @@ export const TreatmentListScreen: React.FC = () => {
         };
         LayoutAnimation.configureNext(animationConfig);
 
-        setHasSelectedAnyTreatments(true);
+        state.setHasSelectedAnyTreatments(true);
         toggleTreatmentSelected(varName);
     };
 
@@ -273,7 +249,7 @@ export const TreatmentListScreen: React.FC = () => {
             }
             return true;
         };
-        TreatmentListHelpers.updateTreatmentState(varName, modification, treatmentStates, setTreatmentStates);
+        TreatmentListHelpers.updateTreatmentState(varName, modification, state.treatmentStates, state.setTreatmentStates);
     };
 
     const handleUnitsButtonPressed = (varName: string) => {
@@ -282,7 +258,7 @@ export const TreatmentListScreen: React.FC = () => {
         const modification = (ts: TreatmentState) => {
             let newValue = ts.ounces;
             let newUnits = ts.units;
-            const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
+            const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, state.allScoops);
 
             if (ts.treatment.type === 'dryChemical') {
                 newUnits = Converter.nextDry(ts.units as DryChemicalUnits, scoop);
@@ -296,7 +272,7 @@ export const TreatmentListScreen: React.FC = () => {
             ts.value = newValue.toFixed(ts.decimalPlaces);
             return true;
         };
-        TreatmentListHelpers.updateTreatmentState(varName, modification, treatmentStates, setTreatmentStates);
+        TreatmentListHelpers.updateTreatmentState(varName, modification, state.treatmentStates, state.setTreatmentStates);
     };
 
     const handleTextFinishedEditing = (varName: string, newText: string) => {
@@ -307,7 +283,7 @@ export const TreatmentListScreen: React.FC = () => {
                 if (isNaN(newValue)) {
                     newValue = 0;
                 }
-                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, allScoops);
+                const scoop = TreatmentListHelpers.getScoopForTreatment(ts.treatment.id, state.allScoops);
 
                 if (ts.treatment.type === 'dryChemical') {
                     newOunces = Converter.dry(newValue, ts.units as DryChemicalUnits, 'ounces', scoop);
@@ -328,16 +304,16 @@ export const TreatmentListScreen: React.FC = () => {
             ts.value = parseFloat(newText).toFixed(newDecimalPlaces);
             return true;
         };
-        TreatmentListHelpers.updateTreatmentState(varName, modification, treatmentStates, setTreatmentStates);
+        TreatmentListHelpers.updateTreatmentState(varName, modification, state.treatmentStates, state.setTreatmentStates);
     };
 
     const handleTreatmentNameButtonPressed = (varName: string) => {
         Haptic.light();
 
-        const t = TreatmentListHelpers.getTreatmentFromFormula(varName, formula);
+        const t = TreatmentListHelpers.getTreatmentFromFormula(varName, state.formula);
         const concentration =
-            TreatmentListHelpers.getConcentrationForTreatment(varName, ds) || t?.concentration || 100;
-        updateConcentrationTreatment(varName);
+            TreatmentListHelpers.getConcentrationForTreatment(varName, state.ds) || t?.concentration || 100;
+        state.updateConcentrationTreatment(varName);
 
         Keyboard.dismiss();
         const pickerProps: PDPickerRouteProps = {
@@ -346,7 +322,7 @@ export const TreatmentListScreen: React.FC = () => {
             pickerKey: 'chem_concentration',
             prevSelection: concentration.toFixed(0),
         };
-        navigate('PickerScreen', pickerProps);
+        state.navigate.navigate('PickerScreen', pickerProps);
     };
 
     const sections: SectionListData<TreatmentState>[] = [
@@ -355,15 +331,15 @@ export const TreatmentListScreen: React.FC = () => {
             isHeader: true,
         },
         {
-            data: treatmentStates,
+            data: state.treatmentStates,
             isHeader: false,
         },
     ];
 
     let completed: TreatmentState[] = [];
     let countedTreatmentStates: TreatmentState[] = [];
-    if (formula) {
-        countedTreatmentStates = treatmentStates.filter((ts) => ts.treatment.type !== 'calculation');
+    if (state.formula) {
+        countedTreatmentStates = state.treatmentStates.filter((ts) => ts.treatment.type !== 'calculation');
         completed = countedTreatmentStates.filter((ts) => ts.isOn);
     }
 
@@ -373,12 +349,12 @@ export const TreatmentListScreen: React.FC = () => {
 
     return (
         <PDSafeAreaView bgColor="white" forceInset={ { bottom: 'never' } }>
-            <ScreenHeader textType="heading" color="purple" hasHelpButton={ false } handlePressedHelp={ () => setIsShowingHelp(!isShowingHelp) }>Treatments</ScreenHeader>
+            <ScreenHeader textType="heading" color="purple" hasHelpButton={ false } handlePressedHelp={ () => state.setIsShowingHelp(!state.isShowingHelp) }>Treatments</ScreenHeader>
             <KeyboardAwareSectionList
-                style={ StyleSheet.flatten([styles.sectionList, { backgroundColor: theme.colors.background }]) }
+                style={ StyleSheet.flatten([styles.sectionList, { backgroundColor: state.theme.colors.background }]) }
                 keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="handled"
-                ref={ scrollViewRef }
+                ref={ state.scrollViewRef }
                 renderItem={ ({ item, index }) => (
                     <TreatmentListItem
                         treatmentState={ item }
@@ -388,7 +364,7 @@ export const TreatmentListScreen: React.FC = () => {
                         handleTreatmentNameButtonPressed={ handleTreatmentNameButtonPressed }
                         inputAccessoryId={ keyboardAccessoryViewId }
                         index={ index }
-                        isShowingHelp={ isShowingHelp }
+                        isShowingHelp={ state.isShowingHelp }
                     />
                 ) }
                 sections={ sections }
@@ -397,7 +373,7 @@ export const TreatmentListScreen: React.FC = () => {
                 canCancelContentTouches
                 stickySectionHeadersEnabled={ false }
                 renderSectionHeader={ ({ section }) => {
-                    if (section.isHeader && haveCalculationsProcessed) {
+                    if (section.isHeader && state.haveCalculationsProcessed) {
                         return <TreatmentListHeader totalActionableTreatments={ countedTreatmentStates.length }/>;
                     } else {
                         return <PDView />;
@@ -405,32 +381,32 @@ export const TreatmentListScreen: React.FC = () => {
                 } }
                 renderSectionFooter={ ({ section }) => {
                     // The second part is just to wait on the animation until after the treatments have all been loaded up.
-                    if (section.isHeader || !haveCalculationsProcessed) {
+                    if (section.isHeader || !state.haveCalculationsProcessed) {
                         return <PDView />;
                     } else {
                         return <TreatmentListFooter
-                        notes={ notes }
-                        updatedNotes={ setNotes }
-                        index={ treatmentStates.length }
-                        ts={ userTS }
-                        updatedTS={ setUserTS }
-                        willShowDatePicker={ () => scrollViewRef?.current?.scrollToEnd(true) } />;
+                        notes={ state.notes }
+                        updatedNotes={ state.setNotes }
+                        index={ state.treatmentStates.length }
+                        ts={ state.userTS }
+                        updatedTS={ state.setUserTS }
+                        willShowDatePicker={ () => state.scrollViewRef?.current?.scrollToEnd(true) } />;
                     }
                 } }
             />
             <PDProgressBar
                 progress={ progress }
-                foregroundColor={ theme.colors.purple }
-                style={ { height: 4, backgroundColor: theme.colors.greyLight } }
+                foregroundColor={ state.theme.colors.purple }
+                style={ { height: 4, backgroundColor: state.theme.colors.greyLight } }
             />
             <PDView
                 borderColor="border"
-                style={ [styles.bottomButtonContainer, { paddingBottom: insets.bottom }] }
+                style={ [styles.bottomButtonContainer, { paddingBottom: state.insets.bottom }] }
                 bgColor="background">
                 <PlayButton
-                    title={ (hasSelectedAnyTreatments || countedTreatmentStates.length === 0) ? 'Save' : 'Save All' }
+                    title={ (state.hasSelectedAnyTreatments || countedTreatmentStates.length === 0) ? 'Save' : 'Save All' }
                     onPress={ save }
-                    buttonStyles={ { backgroundColor: theme.colors.purple } } />
+                    buttonStyles={ { backgroundColor: state.theme.colors.purple } } />
             </PDView>
             <KeyboardButton nativeID={ keyboardAccessoryViewId } bgColor="purple" textColor="white" onPress={ () => Keyboard.dismiss() } >
                 Done Typing
