@@ -12,34 +12,32 @@ export const m_acid: Treatment = {
         // Muriatic Acid helps to lower the pH. I personally don't like
         // how the acid makes the water slimy & unswimmable for a few hours...
         // but meh.
-        
+
         // This is not very precise, feel free to remix. It's another non-linear effect,
         // where the multiplier is different depending on the measure.
         let multiplier = 0;
         const r = extra.readings;
-        
+
         if (r.ph > 8.2) {
-            multiplier = -.0027;
+            multiplier = -.00405;
         }
         else if (r.ph > 8.0) {
-            multiplier = -.0028;
+            multiplier = -.0042;
         }
         else if (r.ph > 7.8) {
-            multiplier = -.0029;
+            multiplier = -.00435;
         }
         else if (r.ph > 7.6) {
-            multiplier = -.0030;
+            multiplier = -.0045;
         }
-        
-        
-        const maxAmount = .0032 * pool.gallons;
+
+        const maxAmount = 0.0075 * pool.gallons;
         const calculatedAmount = pool.gallons * deltas.ph * multiplier;
         // Cap the total amount of acid, just in-case someone enters a pH of 100 somehow:
         const amount = Math.min(maxAmount, calculatedAmount);
 
+        const effectOnPH = amount / (pool.gallons * multiplier);
 
-        const effectOnPH = amount / (pool.gallons * multiplier); 
-        
         return {
             amount,
             effects: {
