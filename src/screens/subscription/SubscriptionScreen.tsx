@@ -8,17 +8,21 @@ import { PDSafeAreaView } from '~/components/PDSafeAreaView';
 import { PDText } from '~/components/PDText';
 import { PDSpacing, useTheme } from '~/components/PDTheme';
 import { PDView } from '~/components/PDView';
+import { Config } from '~/services/Config/AppConfig';
 
 export const SubscriptionScreen: React.FC = () => {
     const theme = useTheme();
 
     const handleTwitchPressed = async () => {
-        Linking.openURL('https://patreon.com/gazzini');
-        Linking.openURL('https://patreon.com/gazzini');
+        Linking.openURL('https://www.twitch.tv/gazzini_time');
     };
 
     const handleGithubPressed = async () => {
         Linking.openURL('https://github.com/pooldash/pd-mobile');
+    };
+
+    const handleForumPressed = async () => {
+        Linking.openURL(Config.forum_url);
     };
 
     return (
@@ -32,7 +36,7 @@ export const SubscriptionScreen: React.FC = () => {
                         👋 Hi, I'm John!
                     </PDText>
                     <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
-                        I used to clean pools, and now I'm an engineer. Thanks for using Pooldash!
+                        I used to clean pools, and now I'm an engineer. Pooldash is free & open-source!
                     </PDText>
                 </PDView>
                 <HR />
@@ -40,23 +44,35 @@ export const SubscriptionScreen: React.FC = () => {
                     Build With Me
                 </PDText>
                 <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
-                    Watch me code on Twitch!
+                    Want to help? Submit a pull-request:
+                </PDText>
+                <PDView style={ styles.buttonContainer }>
+                    <PDButton onPress={ handleGithubPressed } bgColor="greyDarker">
+                        Open Github
+                    </PDButton>
+                </PDView>
+                <HR />
+                <PDText type="subHeading">
+                    Talk To Me
+                </PDText>
+                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                    Or, just tell me what you want on the forum:
+                </PDText>
+                <PDView style={ styles.buttonContainer }>
+                    <PDButton onPress={ handleForumPressed } bgColor="blue">
+                        Open Forum
+                    </PDButton>
+                </PDView>
+                <HR />
+                <PDText type="subHeading">
+                    Watch Me Work
+                </PDText>
+                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
+                    Or, just watch me work on Twitch... sometimes:
                 </PDText>
                 <PDView style={ styles.buttonContainer }>
                     <PDButton onPress={ handleTwitchPressed } bgColor="blue">
                         Open Twitch
-                    </PDButton>
-                </PDView>
-                <HR/>
-                <PDText type="subHeading">
-                    Explore Code
-                </PDText>
-                <PDText type="bodyRegular" color="greyDark" numberOfLines={ 0 } style={ { marginTop: PDSpacing.xs } }>
-                    It's 100% open source:
-                </PDText>
-                <PDView style={ styles.buttonContainer }>
-                    <PDButton onPress={ handleGithubPressed } bgColor="greyDarker">
-                        Open GitHub
                     </PDButton>
                 </PDView>
             </ScrollView>
