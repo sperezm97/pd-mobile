@@ -131,11 +131,12 @@ android {
     }
 
     defaultConfig {
+        Integer buildNumb = System.getenv("ANDROID_VERSION_CODE") as Integer
+        versionCode buildNumb ?: 41
+        versionName "1.92"
         applicationId "com.gazzini.pooldash"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 41
-        versionName "1.92"
         multiDexEnabled true
     }
     splits {
