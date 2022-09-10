@@ -62,13 +62,13 @@ export const useEntryPool = () => {
     const { pool, setPool } = useContext(PartialPoolContext);
 
     /// When the selected recipe key in redux changes, update the partial pool.
-    const selectedFormulaKey = useTypedSelector((state) => state.selectedFormulaKey);
+    const selectedFormulaId = useTypedSelector((state) => state.selectedFormulaKey);
     React.useEffect(() => {
-        if (selectedFormulaKey && selectedFormulaKey !== pool.recipeKey) {
-            setPool({ ...pool, recipeKey: selectedFormulaKey });
+        if (selectedFormulaId && selectedFormulaId !== pool.formulaId) {
+            setPool({ ...pool, formulaId: selectedFormulaId });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedFormulaKey]);
+    }, [selectedFormulaId]);
 
     const isRequiredFilledOut = !!pool.name && !!pool.gallons && !!pool.waterType;
 

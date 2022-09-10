@@ -43,23 +43,23 @@ export const PoolScreen: React.FC = () => {
     const [selectedHistoryCellIds, setSelectedHistoryCellIds] = React.useState<string[]>([]);
 
     const formula = useLoadFormulaHook(selectedPool?.formulaId);
-    const selectedFormulaKey = useTypedSelector((state) => state.selectedFormulaKey);
+    const selectedFormulaId = useTypedSelector((state) => state.selectedFormulaKey);
     const chartData = usePoolChart();
 
     /// If the user selects a new recipe, save it to the pool.
     /// This is so dangerous & error-prone
     React.useEffect(() => {
-        if (!selectedPool || !selectedFormulaKey || selectedPool.recipeKey === selectedFormulaKey) {
+        if (!selectedPool || !selectedFormulaId || selectedPool.recipeKey === selectedFormulaId) {
             return;
         }
         dispatchThunk(
             updatePool({
                 ...selectedPool,
-                recipeKey: selectedFormulaKey ?? undefined,
+                recipeKey: selectedFormulaId ?? undefined,
             }),
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedFormulaKey]);
+    }, [selectedFormulaId]);
 
     if (!selectedPool || !formula) {
         return <PDView  />;
