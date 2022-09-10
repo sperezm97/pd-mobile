@@ -19,7 +19,7 @@ import { ccTarget } from '../targets/ccTarget';
 import { phosphate } from '../readings/phosphate';
 import { phosphate_rem } from '../treatments/phosphate_rem';
 import { na_clo } from '../treatments/na_clo';
-import { hcl } from '../treatments/hcl';
+import { m_acid } from '../treatments/m_acid';
 
 /// This is the default formula for pools with a chlorinator:
 export const australianFormula: Formula = {
@@ -48,7 +48,7 @@ export const australianFormula: Formula = {
         na_clo,
         soda_ash,
         baking_soda,
-        hcl,
+        m_acid,
         cal_chlor,
         cya_treatment,
         lsi,
