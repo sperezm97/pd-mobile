@@ -133,7 +133,7 @@ android {
     defaultConfig {
         Integer buildNumb = System.getenv("ANDROID_VERSION_CODE") as Integer
         versionCode buildNumb ?: 41
-        versionName "1.93"
+        versionName "1.94"
         applicationId "com.gazzini.pooldash"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
