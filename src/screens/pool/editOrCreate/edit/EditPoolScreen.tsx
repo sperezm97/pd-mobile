@@ -19,6 +19,7 @@ import { DeletePool } from './components/DeletePool';
 export const EditPoolScreen: React.FunctionComponent = () => {
     const { visible, toggleVisible } = useModal();
     const { pool } = useEntryPool();
+    console.log('Pool edit screen formula: ' + pool?.formulaId);
     const dispatchThunk = useThunkDispatch();
     const editPoolSectionInfo = useEditPool(pool, toggleVisible);
     const insets = useSafeAreaInsets();
