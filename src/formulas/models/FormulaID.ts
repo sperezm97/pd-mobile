@@ -1,1 +1,1 @@
-export type FormulaID = 'chlorine_cal_hypo' | 'salt_calc_hypo' | 'chlorine_uv' | 'bromine' | 'ecosmarte';
+export type FormulaID = 'chlorine_cal_hypo' | 'salt_calc_hypo' | 'chlorine_uv' | 'bromine' | 'ecosmarte' | 'australian' | 'dichlor';

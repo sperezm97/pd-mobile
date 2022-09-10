@@ -6,11 +6,15 @@ import { FormulaMap } from './models/misc/FormulaMap';
 import { uvFormula } from './formulas/uv';
 import { bromineFormula } from './formulas/bromine';
 import { ecoSmarteFormula } from './formulas/ecosmarte';
+import { australianFormula } from './formulas/australian';
+import { dichlorFormula } from './formulas/dichlor';
 
 /// This is a dumb list of all the formulas -- let's grow it real big!
 export const allFormulas: Formula[] = [
     chlorineFormula,
+    australianFormula,
     saltFormula,
+    dichlorFormula,
     uvFormula,
     bromineFormula,
     ecoSmarteFormula,
