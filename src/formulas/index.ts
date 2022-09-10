@@ -8,6 +8,7 @@ import { bromineFormula } from './formulas/bromine';
 import { ecoSmarteFormula } from './formulas/ecosmarte';
 import { australianFormula } from './formulas/australian';
 import { dichlorFormula } from './formulas/dichlor';
+import { soho } from './formulas/soho';
 
 /// This is a dumb list of all the formulas -- let's grow it real big!
 export const allFormulas: Formula[] = [
@@ -15,6 +16,7 @@ export const allFormulas: Formula[] = [
     australianFormula,
     saltFormula,
     dichlorFormula,
+    soho,
     uvFormula,
     bromineFormula,
     ecoSmarteFormula,
