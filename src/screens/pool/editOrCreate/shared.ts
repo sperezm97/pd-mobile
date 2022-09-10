@@ -9,9 +9,12 @@ export const toPoolNoId = (pool: Partial<IPool>): IPool | null => {
             waterType: pool.waterType ?? 'chlorine',
             wallType: pool.wallType ?? 'plaster',
             email: pool.email,
-            recipeKey: pool.recipeKey,
+            formulaId: pool.formulaId,
             objectId: pool.objectId ?? Util.generateUUID(),
             poolDoctorId: pool.poolDoctorId,
+
+            // Deprecated fields that we still map anyways:
+            recipeKey: pool.recipeKey,
         };
     }
     return null;

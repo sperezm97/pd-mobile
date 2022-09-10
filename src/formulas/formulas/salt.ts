@@ -21,6 +21,8 @@ import { phosphate_rem } from '~/formulas/treatments/phosphate_rem';
 import { dichlor } from '../treatments/dichlor';
 import { ccTarget } from '../targets/ccTarget';
 import { breakpointFCAdjuster } from '../adjusters/breakpoint';
+import { salt as salt_reading } from '../readings/salt';
+import { salt as salt_treatment } from '../treatments/salt';
 
 
 /// This is the default formula for salt-water pools:
@@ -35,6 +37,7 @@ export const saltFormula: Formula = {
         ta,
         ch,
         cya_reading,
+        salt_reading,
         temp_f,
         temp_c,
         phosphate,
@@ -52,6 +55,7 @@ export const saltFormula: Formula = {
         m_acid,
         cal_chlor,
         cya_treatment,
+        salt_treatment,
         lsi,
         swg_up,
         swg_down,

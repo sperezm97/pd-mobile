@@ -39,7 +39,6 @@ export const FormulaScreen: React.FC = () => {
 
     const handleSelectFormulaPressed = () => {
         dispatch(updateSelectedFormula(params.formulaId));
-        console.log('Formula id: ' + params.formulaId);
         navigate(params.prevScreen);
     };
 

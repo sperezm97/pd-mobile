@@ -49,13 +49,13 @@ export const PoolScreen: React.FC = () => {
     /// If the user selects a new recipe, save it to the pool.
     /// This is so dangerous & error-prone
     React.useEffect(() => {
-        if (!selectedPool || !selectedFormulaId || selectedPool.recipeKey === selectedFormulaId) {
+        if (!selectedPool || !selectedFormulaId || selectedPool.formulaId === selectedFormulaId) {
             return;
         }
         dispatchThunk(
             updatePool({
                 ...selectedPool,
-                recipeKey: selectedFormulaId ?? undefined,
+                formulaId: selectedFormulaId ?? undefined,
             }),
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps

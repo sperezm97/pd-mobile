@@ -59,7 +59,7 @@ export class Database {
                     name: pool.name,
                     waterType: pool.waterType,
                     objectId: pool.objectId,
-                    recipeKey: pool.recipeKey,
+                    formulaId: pool.formulaId,
                     wallType: pool.wallType,
                     email: pool.email,
                     poolDoctorId: pool.poolDoctorId,
